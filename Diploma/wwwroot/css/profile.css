@@ -124,30 +124,30 @@ body {
     height: 30px;
 }
 
-.profile-page .profile-body .right-wrapper .latest-photos > .row {
+.profile-page .profile-body .right-wrapper .latest-friends > .row {
     margin-right: 0;
     margin-left: 0;
 }
 
-.profile-page .profile-body .right-wrapper .latest-photos > .row > div {
-    padding-left: 3px;
-    padding-right: 3px;
-}
+    .profile-page .profile-body .right-wrapper .latest-friends > .row > div {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
 
-.profile-page .profile-body .right-wrapper .latest-photos > .row > div figure {
-    -webkit-transition: all .3s ease-in-out;
-    transition: all .3s ease-in-out;
-    margin-bottom: 6px;
-}
+        .profile-page .profile-body .right-wrapper .latest-friends > .row > div figure {
+            -webkit-transition: all .3s ease-in-out;
+            transition: all .3s ease-in-out;
+            margin-bottom: 6px;
+        }
 
-.profile-page .profile-body .right-wrapper .latest-photos > .row > div figure:hover {
-    -webkit-transform: scale(1.06);
-    transform: scale(1.06);
-}
+            .profile-page .profile-body .right-wrapper .latest-friends > .row > div figure:hover {
+                -webkit-transform: scale(1.06);
+                transform: scale(1.06);
+            }
 
-.profile-page .profile-body .right-wrapper .latest-photos > .row > div figure img {
-    border-radius: .25rem;
-}
+            .profile-page .profile-body .right-wrapper .latest-friends > .row > div figure img {
+                border-radius: .25rem;
+            }
 
 .rtl .profile-page .profile-header .cover .cover-body .profile-name {
     margin-left: 0;
@@ -214,4 +214,8 @@ img {
     background-clip: border-box;
     border: 1px solid #f2f4f9;
     border-radius: 0.25rem;
+}
+
+.post-template {
+    display: none;
 }

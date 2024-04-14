@@ -1,7 +1,8 @@
-using CommentMoviesMicroService.SignalRHubs;
+using PostMicroService.SignalRHubs;
 using Microsoft.EntityFrameworkCore;
 using PostMicroService.DbStuff;
 using PostMicroService.DbStuff.Repositories;
+using PostMicroService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ var connectionString = builder.Configuration.GetConnectionString("WebDb");
 builder.Services.AddDbContext<PostNetworkWebDbContext>(x => x.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<PostRepository>();
+builder.Services.AddScoped<PostBuilder>();
 
 builder.Services.AddHttpContextAccessor();
 

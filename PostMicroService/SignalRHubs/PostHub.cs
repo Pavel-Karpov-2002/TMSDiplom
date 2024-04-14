@@ -3,7 +3,7 @@ using PostMicroService.DbStuff.Models;
 using PostMicroService.DbStuff.Repositories;
 using PostMicroService.Services;
 
-namespace CommentMoviesMicroService.SignalRHubs
+namespace PostMicroService.SignalRHubs
 {
     public class PostHub : Hub
     {

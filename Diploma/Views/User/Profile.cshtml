@@ -8,6 +8,9 @@
 
 @section Script {
     <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script src="~/js/post.js"></script>
 }
 
 <div class="container">
@@ -91,18 +94,32 @@
             <!-- POSTS -->
             <div class="col-md-8 col-xl-6 middle-wrapper">
                 <div class="row">
-                    <div class="col-md-12 grid-margin" style="display:none"> @* НАЧАЛА ПОСТА *@
-                        <div class="card rounded">
-                            <div class="card-header">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <img class="img-xs rounded-circle" src="" alt="">@* post.CreatorAvatarUrl *@
-                                        <div class="ml-2">
-                                            <p class="post-creator"></p> @* Creator *@
+                    <div class="col-md-12">
+                        <div class="form-group post-form">
+                            <input type="hidden" name="userId" class="user-id" value="3" /> @* @User.FindFirst("id").Value *@
+                            <input type="hidden" name="userName" class="user-name" value="user" />
+                            <input type="hidden" name="userAvatarUrl" class="user-avatar-url" value="avatar" />
+                            <textarea class="form-control btn-post-description" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <button type="submit" class="btn btn-outline-secondary btn-add-post" id="input-group-button-right">
+                                Оставить пост
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 posts">
+
+                        <div class="col-md-12 grid-margin post post-template">
+                            @* НАЧАЛА ПОСТА *@
+                            <div class="card rounded">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <img class="img-xs rounded-circle user-src-avatarUrl" src="" alt="">@* post.CreatorAvatarUrl *@
+                                            <div class="ml-2">
+                                                <p class="post-creator"></p> @* Creator *@
+                                            </div>
                                         </div>
-                                    </div>
-                                    @* @if (post.CanEditPost || post.CanDeletePost) *@
-                                    
+                                        @* @if (post.CanEditPost || post.CanDeletePost) *@
+
                                         <div class="dropdown">
                                             <button class="btn p-0" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal icon-lg pb-3px">
@@ -112,56 +129,57 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                             @*    @if (post.CanEditPost)
+                                                @*    @if (post.CanEditPost)
                                                 {
-                                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-meh icon-sm mr-2">
-                                                            <circle cx="12" cy="12" r="10"></circle>
-                                                            <line x1="8" y1="15" x2="16" y2="15"></line>
-                                                            <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                                                            <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                                                        </svg> <span class="">Изменить</span>
-                                                    </a>
+                                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-meh icon-sm mr-2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="8" y1="15" x2="16" y2="15"></line>
+                                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                                </svg> <span class="">Изменить</span>
+                                                </a>
                                                 }
- *@
-                                               @*  @if (post.CanDeletePost)
+                                                *@
+                                                @*  @if (post.CanDeletePost)
                                                 {
-                                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-meh icon-sm mr-2">
-                                                            <circle cx="12" cy="12" r="10"></circle>
-                                                            <line x1="8" y1="15" x2="16" y2="15"></line>
-                                                            <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                                                            <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                                                        </svg> <span class="">Удалить</span>
-                                                    </a>
+                                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-meh icon-sm mr-2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="8" y1="15" x2="16" y2="15"></line>
+                                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                                </svg> <span class="">Удалить</span>
+                                                </a>
                                                 } *@
                                             </div>
                                         </div>
-                                    @* @if (post.CanEditPost || post.CanDeletePost) end *@
+                                        @* @if (post.CanEditPost || post.CanDeletePost) end *@
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-body">
-                                <p class="mb-3 tx-14" class="post-description"></p> @* post.Description *@
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex post-actions">
-                                    @* <a href="javascript:;" class="d-flex align-items-center text-muted mr-4">
+                                <div class="card-body">
+                                    <p class="mb-3 tx-14 post-description"></p> @* post.Description *@
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex post-actions">
+                                        @* <a href="javascript:;" class="d-flex align-items-center text-muted mr-4">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart icon-md">
-                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                                         </svg>
                                         <p class="d-none d-md-block ml-2">Like</p>
-                                    </a> *@
-                                    <a href="javascript:;" class="d-flex align-items-center text-muted mr-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square icon-md">
-                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                        </svg>
-                                        <p class="d-none d-md-block ml-2">Комментировать</p>
-                                    </a>
+                                        </a> *@
+                                        <a href="javascript:;" class="d-flex align-items-center text-muted mr-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square icon-md">
+                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                            </svg>
+                                            <p class="d-none d-md-block ml-2">Комментировать</p>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                    
                 </div>
             </div>
             <!-- END POSTS -->
@@ -172,8 +190,8 @@
                     <div class="col-md-12 grid-margin">
                         <div class="card rounded">
                             <div class="card-body">
-                                <h6 class="card-title">latest photos</h6>
-                                <div class="latest-photos">
+                                <h6 class="card-title">Друзья</h6>
+                                <div class="latest-friends">
                                     <div class="row">
                                         @foreach (var friend in Model.Friends)
                                         {

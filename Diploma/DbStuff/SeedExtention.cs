@@ -53,11 +53,11 @@ namespace Diploma.DbStuff
             var userRepository = serviceProvider.GetService<UserRepository>();
             var friendRepository = serviceProvider.GetService<FriendRepository>();
 
-            var admin = userRepository.GetAllInformationAboutUserByLogin("admin");
-            var moderator = userRepository.GetAllInformationAboutUserByLogin("moderator");
-            var user = userRepository.GetAllInformationAboutUserByLogin("user");
             if (!friendRepository.Any())
             {
+                var admin = userRepository.GetAllInformationAboutUserByLogin("admin");
+                var moderator = userRepository.GetAllInformationAboutUserByLogin("moderator");
+                var user = userRepository.GetAllInformationAboutUserByLogin("user");
                 friendRepository.MutualAdditionToFriends(user, admin);
                 friendRepository.MutualAdditionToFriends(user, moderator);
             }
