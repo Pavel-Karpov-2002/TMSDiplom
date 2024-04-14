@@ -37,15 +37,7 @@ builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("WebDb");
 
 builder.Services.AddDbContext<SocialNetworkWebDbContext>(x => x.UseSqlServer(connectionString));
-
-// DI service
-var typeOfBaseServices = typeof(IService);
-AppDomain.CurrentDomain
-    .GetAssemblies()
-    .SelectMany(s => s.GetTypes())
-    .Where(p => typeOfBaseServices.IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-    .ToList()
-    .ForEach(serviceType => builder.Services.AddScoped(serviceType));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // DI repository
 var typeOfBaseRepository = typeof(BaseRepository<>);
@@ -56,6 +48,15 @@ Assembly
         && x.BaseType.GetGenericTypeDefinition() == typeOfBaseRepository)
     .ToList()
     .ForEach(repositoryType => builder.Services.AddScoped(repositoryType));
+
+// DI service
+var typeOfBaseServices = typeof(IService);
+AppDomain.CurrentDomain
+    .GetAssemblies()
+    .SelectMany(s => s.GetTypes())
+    .Where(p => typeOfBaseServices.IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+    .ToList()
+    .ForEach(serviceType => builder.Services.AddScoped(serviceType));
 
 var app = builder.Build();
 

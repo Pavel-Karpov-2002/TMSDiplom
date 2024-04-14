@@ -10,5 +10,10 @@
         public bool IsOnline { get; set; }
 
         public List<FriendViewModel>? Friends { get; set; }
+
+        public bool CanAddPost { get; set; }
+        public bool CanEditPost { get; set; }
+        public bool CanDeletePost { get; set; }
+
     }
 }

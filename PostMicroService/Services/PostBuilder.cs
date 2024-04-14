@@ -1,4 +1,5 @@
 ﻿using PostMicroService.DbStuff.Models;
+using PostMicroService.Models;
 using PostMicroService.Services.Interfaces;
 using PostMicroService.Views;
 
@@ -22,10 +23,16 @@ namespace PostMicroService.Services
             return new PostViewModel
             {
                 CreatorUserName = post.CreatorUserName,
-                DateOfCreation = post.DateOfCreation,
+                DateOfCreation = post.DateOfCreation.UtcDateTime,
                 CreatorAvatarUrl = post.CreatorAvatarUrl,
                 Description = post.Description
             };
+        }
+
+        public Post RebuildEditPostViewToPost(Post post, EditPostView editPost)
+        {
+            post.Description = editPost.Description;
+            return post;
         }
     }
 }

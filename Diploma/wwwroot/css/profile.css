@@ -13,7 +13,6 @@ body {
     border-radius: .25rem .25rem 0 0;
 }
 
-
 .profile-page .profile-header .cover figure {
     margin-bottom: 0;
 }
@@ -61,6 +60,7 @@ body {
     background: linear-gradient(rgba(255, 255, 255, 0.1), #fff 99%);
 }
 
+
 .profile-page .profile-header .cover .cover-body {
     position: absolute;
     bottom: -20px;
@@ -68,6 +68,10 @@ body {
     z-index: 2;
     width: 100%;
     padding: 0 20px;
+}
+.profile-pic {
+    max-width: 150px;
+    max-height: 150px;
 }
 
 .profile-page .profile-header .cover .cover-body .profile-pic {
@@ -190,7 +194,7 @@ img {
 }
 
 .grid-margin {
-    margin-bottom: 1rem;
+    margin-top: 10px;
 }
 
 .card {
@@ -218,4 +222,16 @@ img {
 
 .post-template {
     display: none;
+}
+
+a.dropdown-item {
+    cursor: pointer;
+}
+
+.bottom-post-card {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }

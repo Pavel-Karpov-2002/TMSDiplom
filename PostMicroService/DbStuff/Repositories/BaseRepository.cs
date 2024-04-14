@@ -40,9 +40,9 @@ namespace PostMicroService.DbStuff.Repositories
             return _entyties.ToList();
         }
 
-        public virtual Task<DbModel?>? GetByIdAsync(int id)
+        public virtual async Task<DbModel?>? GetByIdAsync(int id)
         {
-            return _entyties.FirstOrDefaultAsync(x => x.Id == id);
+            return await _entyties.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public virtual async Task<List<DbModel>> GetAllAsync()
@@ -53,14 +53,14 @@ namespace PostMicroService.DbStuff.Repositories
         public virtual async Task AddAsync(DbModel entity)
         {
             await _context.AddAsync(entity);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public virtual async Task DeleteByIdAsync(int id)
         {
             var entity = await _entyties.FirstAsync(x => x.Id == id);
             _entyties.Remove(entity);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public virtual DbModel Update(DbModel entity)
@@ -74,7 +74,7 @@ namespace PostMicroService.DbStuff.Repositories
         {
             var findedEntity = await _entyties.FirstAsync(x => x.Equals(entity));
             _entyties.Remove(entity);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public virtual void DeleteByEntity(DbModel entity)
