@@ -16,16 +16,19 @@ namespace Diploma.DbStuff.Repositories
             => _entyties.Any(x => x.Email == email);
 
         public User? GetUserByLoginAndPassword(string login, string password)
-            => _entyties.FirstOrDefault(user => user.Login == login && user.Password!.Equals(password));
+            => _entyties.FirstOrDefault(user => user.Login.Equals(login) && user.Password!.Equals(password));
+
+        public User? GetUserByEmailAndPassword(string email, string password)
+            => _entyties.FirstOrDefault(user => user.Email.Equals(email) && user.Password!.Equals(password));
 
         public Task<User?> GetUserByLoginAndPasswordAsync(string login, string password)
-            => _entyties.FirstOrDefaultAsync(user => user.Login == login && user.Password!.Equals(password));
+            => _entyties.FirstOrDefaultAsync(user => user.Login.Equals(login) && user.Password!.Equals(password));
 
         public User GetUserByEmail(string email)
-            => _entyties.FirstOrDefault(x => x.Email == email);
+            => _entyties.FirstOrDefault(x => x.Email.Equals(email));
 
         public Task<User> GetUserByEmailAsync(string email)
-            => _entyties.FirstOrDefaultAsync(x => x.Email == email);
+            => _entyties.FirstOrDefaultAsync(x => x.Email.Equals(email));
 
         public User GetAllInformationAboutUserByLogin(string login)
             => _entyties

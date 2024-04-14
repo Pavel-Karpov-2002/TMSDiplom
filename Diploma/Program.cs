@@ -1,3 +1,4 @@
+using Diploma.Controllers;
 using Diploma.DbStuff;
 using Diploma.DbStuff.Repositories;
 using Diploma.Services.Interfaces;
@@ -5,6 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultScheme = AuthController.AUTH_KEY;
+    })
+    .AddCookie(AuthController.AUTH_KEY, option =>
+    {
+        option.AccessDeniedPath = "/auth/deny";
+        option.LoginPath = "/Auth/Login";
+    });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -26,6 +38,7 @@ var connectionString = builder.Configuration.GetConnectionString("WebDb");
 
 builder.Services.AddDbContext<SocialNetworkWebDbContext>(x => x.UseSqlServer(connectionString));
 
+// DI service
 var typeOfBaseServices = typeof(IService);
 AppDomain.CurrentDomain
     .GetAssemblies()
@@ -34,6 +47,7 @@ AppDomain.CurrentDomain
     .ToList()
     .ForEach(serviceType => builder.Services.AddScoped(serviceType));
 
+// DI repository
 var typeOfBaseRepository = typeof(BaseRepository<>);
 Assembly
     .GetAssembly(typeOfBaseRepository)
@@ -47,13 +61,11 @@ var app = builder.Build();
 
 app.UseCors();
 
+// Create seeds
 SeedExtention.Seed(app);
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -67,6 +79,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=News}/{action=Index}/{id?}");
+    pattern: "{controller=Auth}/{action=Login}/{id?}");
 
 app.Run();

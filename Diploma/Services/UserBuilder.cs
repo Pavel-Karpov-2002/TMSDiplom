@@ -10,6 +10,8 @@ namespace Diploma.Services
         public readonly FriendBuilder _friendBuilder;
         public readonly FriendRepository _friendRepository;
 
+        public const string DEFAULT_USER_AVATAR = "/images/userAvatars/default.png";
+
         public UserBuilder(FriendBuilder friendBuilder, FriendRepository friendRepository)
         {
             _friendBuilder = friendBuilder;
@@ -33,7 +35,20 @@ namespace Diploma.Services
                 Email = user.Email ?? "",
                 IsOnline = user.IsOnline,
                 Birthday = user.Birthday ?? null,
-                AvatarUrl = user.AvatarUrl ?? ""
+                AvatarUrl = user.AvatarUrl ?? DEFAULT_USER_AVATAR
+            };
+        }
+
+        public User RebuildRegistrationViewToUser(RegistrationViewModel user)
+        {
+            return new User()
+            {
+                Login = user.Login,
+                Password = user.Password,
+                Email = user.Email ?? "",
+                Username = user.Username,
+                AvatarUrl = DEFAULT_USER_AVATAR,
+                Birthday = null
             };
         }
 
@@ -45,7 +60,7 @@ namespace Diploma.Services
                 Password = password,
                 Email = email ?? "",
                 Username = username,
-                AvatarUrl = avatarUrl ?? "",
+                AvatarUrl = avatarUrl ?? DEFAULT_USER_AVATAR,
                 Birthday = birthday ?? null
             };
         }

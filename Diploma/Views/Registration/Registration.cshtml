@@ -1,0 +1,71 @@
+﻿@using Diploma.Models
+@model RegistrationViewModel
+
+@section Style {
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+}
+
+@section Script {
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+<ul class="nav nav-pills nav-justified mb-3" id="ex1">
+    <li class="nav-item">
+        <a class="nav-link active" id="tab-login" data-mdb-pill-init href="Auth/Login"
+           aria-controls="pills-login" aria-selected="true">Вход</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="tab-register" data-mdb-pill-init href="Registration"
+           aria-controls="pills-register" aria-selected="false">Регистрация</a>
+    </li>
+</ul>
+
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" aria-labelledby="tab-register">
+        @using (Html.BeginForm(nameof(Diploma.Controllers.RegistrationController.Registration), "Registration", FormMethod.Post, new { @class = "mx-1 mx-md-4" }))
+        {
+            <p class="text-center">or:</p>
+
+            <!-- Name input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                @Html.TextBoxFor(x => x.Login, new { @class = "form-control", id = "registerName", type = "text" });
+                <label class="form-label" for="registerName">Логин</label>
+                @Html.ValidationMessageFor(x => x.Login);
+            </div>
+
+            <!-- Username input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                @Html.TextBoxFor(x => x.Username, new { @class = "form-control", id = "registerUsername", type = "text" });
+                <label class="form-label" for="registerUsername">Никнейм</label>
+                @Html.ValidationMessageFor(x => x.Username);
+            </div>
+
+            <!-- Email input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                @Html.TextBoxFor(x => x.Email, new { @class = "form-control", id = "registerEmail", type = "email" });
+                <label class="form-label" for="registerEmail">Email</label>
+                @Html.ValidationMessageFor(x => x.Email);
+            </div>
+
+            <!-- Password input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                @Html.TextBoxFor(x => x.Password, new { @class = "form-control", id = "registerPassword", type = "password" });
+                <label class="form-label" for="registerPassword">Пароль</label>
+                @Html.ValidationMessageFor(x => x.Password);
+            </div>
+
+            <!-- Repeat Password input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+                @Html.TextBoxFor(x => x.PasswordConfirm, new { @class = "form-control", id = "registerRepeatPassword", type = "password" });
+                <label class="form-label" for="registerRepeatPassword">Повторите пароль</label>
+                @Html.ValidationMessageFor(x => x.PasswordConfirm);
+            </div>
+            <!-- Submit button -->
+            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-3">Зарегистрироваться</button>
+        }
+    </div>
+</div>
