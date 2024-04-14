@@ -52,5 +52,14 @@ namespace Diploma.DbStuff.Repositories
             .Include(user => user.Roles)
             .Include(user => user.Friends)
             .FirstOrDefault(x => x.Id == id);
+
+        public async Task<bool> UpdateAvatarAsync(int userId, string avatarUrl)
+        {
+            var user = await GetByIdAsync(userId)!;
+            user!.AvatarUrl = avatarUrl;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

@@ -22,6 +22,11 @@ namespace Diploma.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Profile", "User", new { id = User.FindFirst("id").Value });
+            }
+
             return View();
         }
 
@@ -29,7 +34,7 @@ namespace Diploma.Controllers
         public IActionResult Login(AuthViewModel authViewModel)
         {
             var user = _userRepository.GetUserByLoginAndPassword(authViewModel.Login, authViewModel.Password);
-
+            
             if (user is null)
             {
                 user = _userRepository.GetUserByEmailAndPassword(authViewModel.Login, authViewModel.Password);

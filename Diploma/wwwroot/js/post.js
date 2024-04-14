@@ -48,7 +48,7 @@
         const newPostBlock = $('.post.post-template').clone();
         newPostBlock.removeClass('post-template');
         newPostBlock.find('.post-creator').text(userName);
-        newPostBlock.find('.user-src-avatarUrl').attr('src', userAvatarUrl);
+        newPostBlock.find('.user-avatarUrl').attr('src', userAvatarUrl);
         newPostBlock.find('.post-description').text(description);
         var timestamp = new Date(dateOfCreation).getTime();
         var datetime = new Date(timestamp);
@@ -97,8 +97,7 @@
                 PostId: parseInt(id),
                 Description: updateDescription
             }
-            hub
-                .invoke('EditPost', { ...updatePost })
+            hub.invoke('EditPost', { ...updatePost })
                 .then((result) => {
                     if (result) {
                         var editDiv = $('<p />', {
