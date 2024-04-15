@@ -53,7 +53,7 @@ namespace Diploma.Controllers
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync().Wait();
-            return RedirectToAction("Index", "Auth");
+            return RedirectToAction("Login", "Auth");
         }
 
         private void SignInUser(User user)

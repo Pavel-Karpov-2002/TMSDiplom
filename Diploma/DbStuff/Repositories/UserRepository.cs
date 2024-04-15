@@ -1,4 +1,5 @@
 ﻿using Diploma.DbStuff.Models;
+using Diploma.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Diploma.DbStuff.Repositories
@@ -70,6 +71,5 @@ namespace Diploma.DbStuff.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-
     }
 }

@@ -1,0 +1,56 @@
+﻿@model string // User id
+
+@section Style {
+    <link rel="stylesheet" href="~/css/navigation.css" />
+}
+<div class="navigation-main">
+    <div class="navigation-block">
+        <div class="px-3 pt-2 text-white min-vh-100">
+            <!-- элементы меню -->
+            @if (Model == "")
+            {
+                <ul class="nav nav-pills mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="/auth/login" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i>
+                            <span class="ms-1 d-none d-sm-inline">Войти</span>
+                        </a>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <ul class="nav nav-pills mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="/auth/logout" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i>
+                            <span class="ms-1 d-none d-sm-inline">Выйти</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="nav nav-pills mb-sm-auto mb-0 align-items-center justify-content-center flex-column align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="/user/@Model" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i>
+                            <span class="ms-1 d-none d-sm-inline">Моя страница</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="user/friends/@Model" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Друзья</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="user/messages/@Model" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Сообщения</span>
+                        </a>
+                    </li>
+                </ul>
+            }
+            <hr>
+        </div>
+    </div>
+</div>

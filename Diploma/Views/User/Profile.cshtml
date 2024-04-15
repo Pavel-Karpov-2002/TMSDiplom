@@ -16,209 +16,231 @@
     <script src="~/js/friend.js"></script>
 }
 
-<div class="container">
-    <div class="profile-page tx-13">
-        <div class="row">
-            <div class="col-12 grid-margin">
-                <div class="profile-header">
-                    <div class="header-links">
-                        <ul class="links d-flex align-items-center mt-3 mt-md-0">
-                            <li class="header-link-item d-flex align-items-center active">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-columns mr-1 icon-md">
-                                    <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
-                                </svg>
-                                <a class="pt-1px d-none d-md-block" href="/posts/">Новости</a>
-                            </li>
-                            <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users mr-1 icon-md">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
-                                <a class="pt-1px d-none d-md-block" href="/user/friends?userId=@Model.Id">
-                                    Друзья 
-                                    <span class="text-muted tx-12">
-                                        3,765
-                                        </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row profile-body">
-            <!-- USER PROFILE -->
-            <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
-                <div class="card rounded">
-                    <div class="cover">
-                        <div class="gray-shade"></div>
-                        <div class="cover-body d-flex justify-content-between align-items-center">
-                            <div>
-                                <img class="profile-pic" src="@Model.AvatarUrl" alt="profile">
-                                <span class="profile-name">@Model.Username</span>
-                                @if (Model.CanChangeAvatar)
-                                {
-                                    <form action="/user/UpdateUserAvatar" method="post" enctype="multipart/form-data">
-                                        <div class="form-file">
-                                            <input type="hidden" name="userId" value="@Model.Id" />
-                                            <input type="file" name="avatar" class="form-file-input" id="customFile" accept="image/png, image/jpeg">
-                                            <label class="form-file-label" for="customFile">
-                                                <span class="form-file-text">Выбрать файл...</span>
-                                                <span class="form-file-button">Посмотреть</span>
-                                            </label>
-                                        </div>
-                                        <input type="submit" value="Обновить аватар" />
-                                    </form>
-                                }
+@if (User.Identity.IsAuthenticated)
+{
+    @await Html.PartialAsync("_NavigationBlock", User.FindFirst("id").Value);
+}
+else
+{
+    @await Html.PartialAsync("_NavigationBlock", "");    
+}
 
-                                @if (User.Identity.IsAuthenticated && (User.FindFirst("id").Value != Model.Id.ToString()))
+<div class="row">
+    <div class="container">
+        <div class="profile-page tx-13">
+            <div class="row">
+                <div class="col-12 grid-margin">
+                    <div class="profile-header">
+                        <div class="header-links">
+                            <ul class="links d-flex align-items-center mt-3 mt-md-0">
+                                <li class="header-link-item d-flex align-items-center active">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-columns mr-1 icon-md">
+                                        <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
+                                    </svg>
+                                    <a class="pt-1px d-none d-md-block" href="/posts/">Новости</a>
+                                </li>
+                                <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users mr-1 icon-md">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                    <a class="pt-1px d-none d-md-block" href="/user/friends?userId=@Model.Id">
+                                        Друзья
+                                    </a>
+                                </li>
+                                @if (Model.CanOpenAdminPanel)
                                 {
-                                    @if (Model.CanAddFriend)
-                                    {
-                                        <div class="add-friend">
-                                            <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
-                                            <input type="hidden" class="userId" value="@Model.Id" />
-                                            <input type="button" class="btn-friend" value="Добавить в друзья" />
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="remove-friend">
-                                            <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
-                                            <input type="hidden" class="userId" value="@Model.Id" />
-                                            <input type="button" class="btn-friend" value="Удалить из друзей" />
-                                        </div>
-                                    }
+                                    <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users mr-1 icon-md">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                        <a class="pt-1px d-none d-md-block" href="/AdminPanel/Index?countTakeUsers=10">
+                                            Админ панель
+                                        </a>
+                                    </li>
                                 }
-                            </div>
+                            </ul>
                         </div>
                     </div>
-                    <div class="card-body">
-
-                        @if (Model.IsOnline)
-                        {
-                            <div class="mt-3">
-                                <p class="text-muted">Online</p>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="mt-3">
-                                <p class="text-muted">Offline</p>
-                            </div>
-                        }
-                        @if (Model.Birthday != null)
-                        {
-                            <div class="mt-3">
-                                <label class="tx-11 font-weight-bold mb-0 text-uppercase">Дата рождения:</label>
-                                <p class="text-muted">@Model.Birthday</p>
-                            </div>
-                        }
-                        @if (Model.Email != null)
-                        {
-                            <div class="mt-3">
-                                <label class="tx-11 font-weight-bold mb-0 text-uppercase">Email:</label>
-                                <p class="text-muted">@Model.Email</p>
-                            </div>
-                        }
-                    </div>
                 </div>
             </div>
-            <!-- USER PROFILE -->
-
-            <!-- POSTS -->
-             <div class="col-md-8 col-xl-6 middle-wrapper">
-               <div class="row">
-                    @if (Model.CanAddPost)
-                    {
-                        <div class="col-md-12">
-                            <div class="form-group post-form">
-                                <input type="hidden" name="userId" class="user-id" value="@User.FindFirst("id").Value" />
-                                <input type="hidden" name="userName" class="user-name" value="@User.FindFirst("username").Value" />
-                                <input type="hidden" name="userAvatarUrl" class="user-avatar-url" value="@User.FindFirst("avatar").Value" />
-                                <textarea class="form-control btn-post-description" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                <button type="submit" class="btn btn-outline-secondary btn-add-post" id="input-group-button-right">
-                                    Оставить пост
-                                </button>
-                            </div>
-                        </div> 
-                    }
-                    <div class="col-md-12 posts">
-                        <div class="col-md-12 grid-margin post post-template">
-                           <input hidden name="post-id" value="" />
-                            <div class="card rounded">
-                                <div class="card-header">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <img class="img-xs rounded-circle user-avatarUrl" alt="avatar">
-                                            <div class="ml-2">
-                                                <p class="post-creator"></p> 
+            <div class="row profile-body">
+                <!-- USER PROFILE -->
+                <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
+                    <div class="card rounded">
+                        <div class="cover">
+                            <div class="gray-shade"></div>
+                            <div class="cover-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <img class="profile-pic" src="@Model.AvatarUrl" alt="profile">
+                                    <span class="profile-name">@Model.Username</span>
+                                    @if (Model.CanChangeAvatar)
+                                    {
+                                        <form action="/user/UpdateUserAvatar" method="post" enctype="multipart/form-data">
+                                            <div class="form-file">
+                                                <input type="hidden" name="userId" value="@Model.Id" />
+                                                <input type="file" name="avatar" class="form-file-input" id="customFile" accept="image/png, image/jpeg">
+                                                <label class="form-file-label" for="customFile">
+                                                    <span class="form-file-text">Выбрать файл...</span>
+                                                    <span class="form-file-button">Посмотреть</span>
+                                                </label>
                                             </div>
-                                        </div>
-                                        @if (Model.CanEditPost || Model.CanDeletePost)
+                                            <input type="submit" value="Обновить аватар" />
+                                        </form>
+                                    }
+
+                                    @if (User.Identity.IsAuthenticated && (User.FindFirst("id").Value != Model.Id.ToString()))
+                                    {
+                                        @if (Model.CanAddFriend)
                                         {
-                                            <div class="dropdown">
-                                                <button class="btn p-0 btn-dropdown-post" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal icon-lg pb-3px">
-                                                        <circle cx="12" cy="12" r="1"></circle>
-                                                        <circle cx="19" cy="12" r="1"></circle>
-                                                        <circle cx="5" cy="12" r="1"></circle>
-                                                    </svg>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    @if (Model.CanEditPost)
-                                                    {
-                                                        <a class="dropdown-item d-flex align-items-center btn-post-edit">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-meh icon-sm mr-2">
-                                                            <circle cx="12" cy="12" r="10"></circle>
-                                                                <line x1="8" y1="15" x2="16" y2="15"></line>
-                                                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                                                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                                                            </svg> 
-                                                            <span class="">Изменить</span>
-                                                        </a>
-                                                    }
-                                                    @if (Model.CanDeletePost)
-                                                    {
-                                                        <a class="dropdown-item d-flex align-items-center btn-post-delete">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-meh icon-sm mr-2">
-                                                                <circle cx="12" cy="12" r="10"></circle>
-                                                                <line x1="8" y1="15" x2="16" y2="15"></line>
-                                                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                                                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                                                            </svg> 
-                                                            <span class="">Удалить</span>
-                                                        </a>
-                                                    } 
-                                                </div>
+                                            <div class="add-friend">
+                                                <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
+                                                <input type="hidden" class="userId" value="@Model.Id" />
+                                                <input type="button" class="btn-friend" value="Добавить в друзья" />
                                             </div>
                                         }
-                                    </div>
+                                        else
+                                        {
+                                            <div class="remove-friend">
+                                                <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
+                                                <input type="hidden" class="userId" value="@Model.Id" />
+                                                <input type="button" class="btn-friend" value="Удалить из друзей" />
+                                            </div>
+                                        }
+                                    }
                                 </div>
-                                <div class="card-body">
-                                    <p class="mb-3 tx-14 post-description"></p>
-                                </div>
-                                <div class="card-footer bottom-post-card">
-                                    <div class="d-flex post-actions">
-                                        <a href="javascript:;" class="d-flex align-items-center text-muted mr-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square icon-md">
-                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                            </svg>
-                                            <p class="d-none d-md-block ml-2">Комментировать</p>
-                                        </a>
-                                    </div>
-                                    <label class="post-create-time">
+                            </div>
+                        </div>
+                        <div class="card-body">
 
-                                    </label>
+                            @if (Model.IsOnline)
+                            {
+                                <div class="mt-3">
+                                    <p class="text-muted">Online</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="mt-3">
+                                    <p class="text-muted">Offline</p>
+                                </div>
+                            }
+                            @if (Model.Birthday != null)
+                            {
+                                <div class="mt-3">
+                                    <label class="tx-11 font-weight-bold mb-0 text-uppercase">Дата рождения:</label>
+                                    <p class="text-muted">@Model.Birthday</p>
+                                </div>
+                            }
+                            @if (Model.Email != null)
+                            {
+                                <div class="mt-3">
+                                    <label class="tx-11 font-weight-bold mb-0 text-uppercase">Email:</label>
+                                    <p class="text-muted">@Model.Email</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <!-- USER PROFILE -->
+
+                <!-- POSTS -->
+                 <div class="col-md-8 col-xl-6 middle-wrapper">
+                   <div class="row">
+                        @if (Model.CanAddPost)
+                        {
+                            <div class="col-md-12">
+                                <div class="form-group post-form">
+                                    <input type="hidden" name="userId" class="user-id" value="@User.FindFirst("id").Value" />
+                                    <input type="hidden" name="userName" class="user-name" value="@User.FindFirst("username").Value" />
+                                    <input type="hidden" name="userAvatarUrl" class="user-avatar-url" value="@User.FindFirst("avatar").Value" />
+                                    <textarea class="form-control btn-post-description" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <button type="submit" class="btn btn-outline-secondary btn-add-post" id="input-group-button-right">
+                                        Оставить пост
+                                    </button>
+                                </div>
+                            </div> 
+                        }
+                        <div class="col-md-12 posts">
+                            <div class="col-md-12 grid-margin post post-template">
+                               <input hidden name="post-id" value="" />
+                                <div class="card rounded">
+                                    <div class="card-header">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <img class="img-xs rounded-circle user-avatarUrl" alt="avatar">
+                                                <div class="ml-2">
+                                                    <p class="post-creator"></p> 
+                                                </div>
+                                            </div>
+                                            @if (Model.CanEditPost || Model.CanDeletePost)
+                                            {
+                                                <div class="dropdown">
+                                                    <button class="btn p-0 btn-dropdown-post" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal icon-lg pb-3px">
+                                                            <circle cx="12" cy="12" r="1"></circle>
+                                                            <circle cx="19" cy="12" r="1"></circle>
+                                                            <circle cx="5" cy="12" r="1"></circle>
+                                                        </svg>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        @if (Model.CanEditPost)
+                                                        {
+                                                            <a class="dropdown-item d-flex align-items-center btn-post-edit">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-meh icon-sm mr-2">
+                                                                <circle cx="12" cy="12" r="10"></circle>
+                                                                    <line x1="8" y1="15" x2="16" y2="15"></line>
+                                                                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                                                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                                                </svg> 
+                                                                <span class="">Изменить</span>
+                                                            </a>
+                                                        }
+                                                        @if (Model.CanDeletePost)
+                                                        {
+                                                            <a class="dropdown-item d-flex align-items-center btn-post-delete">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-meh icon-sm mr-2">
+                                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                                    <line x1="8" y1="15" x2="16" y2="15"></line>
+                                                                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                                                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                                                </svg> 
+                                                                <span class="">Удалить</span>
+                                                            </a>
+                                                        } 
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="mb-3 tx-14 post-description"></p>
+                                    </div>
+                                    <div class="card-footer bottom-post-card">
+                                        <div class="d-flex post-actions">
+                                            <a href="javascript:;" class="d-flex align-items-center text-muted mr-4">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square icon-md">
+                                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                                </svg>
+                                                <p class="d-none d-md-block ml-2">Комментировать</p>
+                                            </a>
+                                        </div>
+                                        <label class="post-create-time">
+
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- END POSTS -->
             </div>
-            <!-- END POSTS -->
         </div>
     </div>
 </div>

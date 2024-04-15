@@ -48,7 +48,8 @@ namespace Diploma.Services
                 Email = user.Email ?? "",
                 Username = user.Username,
                 AvatarUrl = DEFAULT_USER_AVATAR,
-                Birthday = null
+                Birthday = null,
+                Roles = new List<Role> { new Role { Name = Roles.User.ToString() } }
             };
         }
 

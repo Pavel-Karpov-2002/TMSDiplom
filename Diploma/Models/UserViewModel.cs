@@ -16,6 +16,7 @@
         public bool CanDeletePost { get; set; }
         public bool CanChangeAvatar { get; set; }
         public bool CanAddFriend { get; set; }
+        public bool CanOpenAdminPanel { get; set; }
 
     }
 }

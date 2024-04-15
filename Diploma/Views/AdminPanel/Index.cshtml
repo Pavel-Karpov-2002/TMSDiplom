@@ -1,0 +1,15 @@
+﻿@using Diploma.Controllers
+@model AdminPanelViewModel
+
+@foreach (var user in Model.Users)
+{
+    @using (Html.BeginForm(nameof(AdminPanelController.EditUser), "AdminPanel", FormMethod.Post))
+    {
+        <input type="hidden" name="id" value="@user.Id" />
+        <p>Login: <input type="text" name="username" value="@user.Username" /></p>
+        <p>Login: <input type="datetime" name="birthday" value="@user.Birthday" /></p>
+        <p>Email: <input type="text" name="email" value="@user.Email" /></p>
+        <p>AvatarUrl: <input type="text" name="avatarUrl" value="@user.AvatarUrl" /></p>
+        <p><input type="submit" value="Обновить" /></p>
+    }
+}

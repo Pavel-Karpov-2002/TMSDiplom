@@ -1,0 +1,13 @@
+.navigation-block {
+    width: 20vw;
+    background-color: rgb(181 181 181 / 89%);
+    margin-left: auto;
+    float: right;
+    margin-right: 0px;
+    position: fixed;
+}
+
+.navigation-main {
+    display: flex;
+    justify-content: right;
+}

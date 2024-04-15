@@ -1,5 +1,9 @@
-﻿using Diploma.DbStuff.Repositories;
+﻿using Diploma.Controllers.CustomAuthAttributes;
+using Diploma.DbStuff.Models;
+using Diploma.DbStuff.Repositories;
 using Diploma.Services;
+using Diploma.Services.Permissions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Diploma.Controllers
@@ -13,13 +17,21 @@ namespace Diploma.Controllers
         private readonly UserBuilder _userBuilder;
         private readonly CreateFilePathHelper _createFilePathHelper;
         private readonly UploadFileHelper _uploadFileHelper;
+        private readonly AuthirizateUserPermissions _authirizateUserPermissions;
 
         private string _straightPathForUsers = "";
 
         private const string DEFAULT_USER_AVATAR_PATH_FOR_DB = "/images/userAvatars/";
         private const string DEFAULT_USER_AVATAR_NAME = "userAvatar_";
 
-        public UserController(UserRepository userRepository, UserBuilder userBuilder, AuthService authService, CreateFilePathHelper createFilePathHelper, UploadFileHelper uploadFileHelper, FriendRepository friendRepository, FriendBuilder friendBuilder)
+        public UserController(UserRepository userRepository,
+                              UserBuilder userBuilder,
+                              AuthService authService,
+                              CreateFilePathHelper createFilePathHelper,
+                              UploadFileHelper uploadFileHelper,
+                              FriendRepository friendRepository,
+                              FriendBuilder friendBuilder,
+                              AuthirizateUserPermissions authirizateUserPermissions)
         {
             _userRepository = userRepository;
             _userBuilder = userBuilder;
@@ -29,6 +41,7 @@ namespace Diploma.Controllers
             _straightPathForUsers = _createFilePathHelper.GetStraightPath("images", "userAvatars");
             _friendRepository = friendRepository;
             _friendBuilder = friendBuilder;
+            _authirizateUserPermissions = authirizateUserPermissions;
         }
 
         public IActionResult Index()
@@ -41,30 +54,18 @@ namespace Diploma.Controllers
         {
             var user = await _userRepository.GetAllInformationAboutUserByIdAsync(id);
             var userViewModel = _userBuilder.RebuildUserToUserViewModel(user);
-
-            if (HttpContext.User.Identity.IsAuthenticated)
-            {
-                var userId = _authService.GetCurrentUserId().Value;
-                if (userId == id)
-                {
-                    userViewModel.CanAddPost = true;
-                    userViewModel.CanEditPost = true;
-                    userViewModel.CanDeletePost = true;
-                    userViewModel.CanChangeAvatar = true;
-                }
-                else
-                {
-                    var isFriend = user.Friends.Any(f => f.MainUserId == userId);
-                    if (!isFriend)
-                    {
-                        userViewModel.CanAddFriend = true;
-                    }
-                }
-            }
+            userViewModel.CanAddPost = _authirizateUserPermissions.CanAddPost(id);
+            userViewModel.CanEditPost = _authirizateUserPermissions.CanEditPost(id);
+            userViewModel.CanDeletePost = _authirizateUserPermissions.CanDeletePost(id);
+            userViewModel.CanChangeAvatar = _authirizateUserPermissions.CanChangeAvatar(id);
+            userViewModel.CanAddFriend = _authirizateUserPermissions.CanAddFriend(id);
+            userViewModel.CanOpenAdminPanel = _authirizateUserPermissions.CanOpenAdminPanel();
             return View(userViewModel);
         }
 
         [Route("user/updateUserAvatar")]
+        [Authorize]
+        [Role(Roles.User, Roles.Moderator, Roles.Admin)]
         public async Task<IActionResult> UpdateUserAvatar(int userId, IFormFile avatar)
         {
             var extension = Path.GetExtension(avatar.FileName);
@@ -76,10 +77,12 @@ namespace Diploma.Controllers
             return RedirectToAction("Profile", new { id = userId });
         }
 
+        [Authorize]
         public async Task<IActionResult> Friends(int userId)
         {
             var user = await _userRepository.GetFriendsUserByIdAsync(userId);
             var userViewModel = _userBuilder.RebuildUserToUserViewModel(user);
+            userViewModel.CanOpenAdminPanel = _authirizateUserPermissions.CanOpenAdminPanel();
             var friends = _friendRepository.GetFriendsByUserId(userId);
             var friendViewModels = friends.Select(f => _friendBuilder.RebuildFriendToFriendViewModel(f)).ToList();
             var friendsViewModel = _friendBuilder.BuildFriendsViewModel(userViewModel, friendViewModels);

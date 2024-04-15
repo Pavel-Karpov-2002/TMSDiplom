@@ -36,7 +36,7 @@ namespace Diploma.Services
                 return null;
             }
 
-            return _userRepository.GetById(id.Value);
+            return _userRepository.GetAllInformationAboutUserById(id.Value);
         }
 
         public bool IsAuthenticated()
