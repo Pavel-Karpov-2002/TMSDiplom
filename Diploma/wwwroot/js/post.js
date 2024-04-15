@@ -50,20 +50,20 @@
         newPostBlock.find('.post-creator').text(userName);
         newPostBlock.find('.user-avatarUrl').attr('src', userAvatarUrl);
         newPostBlock.find('.post-description').text(description);
-        var timestamp = new Date(dateOfCreation).getTime();
-        var datetime = new Date(timestamp);
+        let timestamp = new Date(dateOfCreation).getTime();
+        let datetime = new Date(timestamp);
         newPostBlock.find('.post-create-time').text(datetime.toLocaleString());
         newPostBlock.find('.post-id').val(postId);
-        var dropId = 'dropdownMenuButton' + postId;
-        var dropdown = newPostBlock.find('.btn-dropdown-post');  
+        let dropId = 'dropdownMenuButton' + postId;
+        let dropdown = newPostBlock.find('.btn-dropdown-post');  
         dropdown.attr('id', dropId);
-        var dropdownContent = newPostBlock.find('.dropdown-menu');
+        let dropdownContent = newPostBlock.find('.dropdown-menu');
         dropdownContent.attr('aria-labelledby', dropId);
-        var btnDelete = newPostBlock.find('.btn-post-delete');
+        let btnDelete = newPostBlock.find('.btn-post-delete');
         btnDelete.click(() => {
             deletePost(postId, newPostBlock);
         });
-        var btnEdit = newPostBlock.find('.btn-post-edit');
+        let btnEdit = newPostBlock.find('.btn-post-edit');
         btnEdit.click(() => {
             editPost(postId, newPostBlock);
         });
@@ -80,19 +80,19 @@
     }
 
     const editPost = (id, post) => {
-        var editTextarea = $('<textarea />', {
+        let editTextarea = $('<textarea />', {
             'class': 'form-control ' + 'btn-post-description-' + id,
             rows: 3,
             'text': $(post).find('.post-description').text()
         });
-        var description = post.find('.post-description');
+        let description = post.find('.post-description');
         description.replaceWith(editTextarea);
-        var editButton = post.append(`<div class="d-grid">
+        let editButton = post.append(`<div class="d-grid">
                         <button class="btn btn-primary btn-edit-save" type = "button">Сохранить изменения</button>
                     </div> `).children().last();
 
         post.find('.btn-edit-save').click((obj) => {
-            var updateDescription = editTextarea.val();
+            let updateDescription = editTextarea.val();
             const updatePost = {
                 PostId: parseInt(id),
                 Description: updateDescription
@@ -100,7 +100,7 @@
             hub.invoke('EditPost', { ...updatePost })
                 .then((result) => {
                     if (result) {
-                        var editDiv = $('<p />', {
+                        let editDiv = $('<p />', {
                             'class': 'mb-3 tx-14 post-description',
                             'text': updateDescription
                         });

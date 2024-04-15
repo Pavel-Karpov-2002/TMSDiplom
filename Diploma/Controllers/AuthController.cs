@@ -1,16 +1,15 @@
 ﻿using Diploma.DbStuff.Models;
 using Diploma.DbStuff.Repositories;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Diploma.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Diploma.Models;
 
 namespace Diploma.Controllers
 {
     public class AuthController : Controller
     {
-        private UserRepository _userRepository;
+        private readonly UserRepository _userRepository;
 
         public const string AUTH_KEY = "keyYEK";
 

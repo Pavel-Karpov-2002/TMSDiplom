@@ -6,9 +6,11 @@ namespace Diploma.Controllers
 {
     public class UserController : Controller
     {
-        public readonly UserRepository _userRepository;
-        public readonly AuthService _authService;
-        public readonly UserBuilder _userBuilder;
+        private readonly UserRepository _userRepository;
+        private readonly FriendRepository _friendRepository;
+        private readonly FriendBuilder _friendBuilder;
+        private readonly AuthService _authService;
+        private readonly UserBuilder _userBuilder;
         private readonly CreateFilePathHelper _createFilePathHelper;
         private readonly UploadFileHelper _uploadFileHelper;
 
@@ -17,7 +19,7 @@ namespace Diploma.Controllers
         private const string DEFAULT_USER_AVATAR_PATH_FOR_DB = "/images/userAvatars/";
         private const string DEFAULT_USER_AVATAR_NAME = "userAvatar_";
 
-        public UserController(UserRepository userRepository, UserBuilder userBuilder, AuthService authService, CreateFilePathHelper createFilePathHelper, UploadFileHelper uploadFileHelper)
+        public UserController(UserRepository userRepository, UserBuilder userBuilder, AuthService authService, CreateFilePathHelper createFilePathHelper, UploadFileHelper uploadFileHelper, FriendRepository friendRepository, FriendBuilder friendBuilder)
         {
             _userRepository = userRepository;
             _userBuilder = userBuilder;
@@ -25,6 +27,8 @@ namespace Diploma.Controllers
             _createFilePathHelper = createFilePathHelper;
             _uploadFileHelper = uploadFileHelper;
             _straightPathForUsers = _createFilePathHelper.GetStraightPath("images", "userAvatars");
+            _friendRepository = friendRepository;
+            _friendBuilder = friendBuilder;
         }
 
         public IActionResult Index()
@@ -32,7 +36,7 @@ namespace Diploma.Controllers
             return View();
         }
 
-        [Route("user/{id?}")]
+        [Route("user/{id:int}")]
         public async Task<IActionResult> Profile(int id)
         {
             var user = await _userRepository.GetAllInformationAboutUserByIdAsync(id);
@@ -48,6 +52,14 @@ namespace Diploma.Controllers
                     userViewModel.CanDeletePost = true;
                     userViewModel.CanChangeAvatar = true;
                 }
+                else
+                {
+                    var isFriend = user.Friends.Any(f => f.MainUserId == userId);
+                    if (!isFriend)
+                    {
+                        userViewModel.CanAddFriend = true;
+                    }
+                }
             }
             return View(userViewModel);
         }
@@ -62,6 +74,16 @@ namespace Diploma.Controllers
             var urlPath = $"{DEFAULT_USER_AVATAR_PATH_FOR_DB}{fileName}";
             await _userRepository.UpdateAvatarAsync(userId, urlPath);
             return RedirectToAction("Profile", new { id = userId });
+        }
+
+        public async Task<IActionResult> Friends(int userId)
+        {
+            var user = await _userRepository.GetFriendsUserByIdAsync(userId);
+            var userViewModel = _userBuilder.RebuildUserToUserViewModel(user);
+            var friends = _friendRepository.GetFriendsByUserId(userId);
+            var friendViewModels = friends.Select(f => _friendBuilder.RebuildFriendToFriendViewModel(f)).ToList();
+            var friendsViewModel = _friendBuilder.BuildFriendsViewModel(userViewModel, friendViewModels);
+            return View(friendsViewModel);
         }
     }
 }

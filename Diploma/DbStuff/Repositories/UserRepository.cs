@@ -47,6 +47,16 @@ namespace Diploma.DbStuff.Repositories
             .Include(user => user.Friends)
             .FirstOrDefault(x => x.Id == id);
 
+        public User GetFriendsUserById(int id)
+            => _entyties
+            .Include(user => user.Friends)
+            .FirstOrDefault(x => x.Id == id);
+
+        public async Task<User> GetFriendsUserByIdAsync(int id)
+            => await _entyties
+            .Include(user => user.Friends)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
         public async Task<User> GetAllInformationAboutUserByIdAsync(int id)
             => _entyties
             .Include(user => user.Roles)

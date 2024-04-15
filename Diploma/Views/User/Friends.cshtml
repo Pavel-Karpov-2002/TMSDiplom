@@ -1,0 +1,180 @@
+﻿@using Diploma.Models
+@model FriendsViewModel
+
+@section Style {
+    <link rel="stylesheet" href="~/css/profile.css" />
+    <link rel="stylesheet" href="~/css/friend.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+}
+
+@section Script {
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="~/js/friend.js"></script>
+}
+
+<div class="container">
+    <div class="profile-page tx-13">
+        <div class="row">
+            <div class="col-12 grid-margin">
+                <div class="profile-header">
+                    <div class="header-links">
+                        <ul class="links d-flex align-items-center mt-3 mt-md-0">
+                            <li class="header-link-item d-flex align-items-center active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-columns mr-1 icon-md">
+                                    <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
+                                </svg>
+                                <a class="pt-1px d-none d-md-block" href="/posts/">Новости</a>
+                            </li>
+                            <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users mr-1 icon-md">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <a class="pt-1px d-none d-md-block" href="/user/friends?userId=@Model.User.Id">
+                                    Друзья
+                                    <span class="text-muted tx-12">
+                                        3,765
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row profile-body">
+            <!-- USER PROFILE -->
+            <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
+                <div class="card rounded">
+                    <div class="cover">
+                        <div class="gray-shade"></div>
+                        <div class="cover-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <img class="profile-pic" src="@Model.User.AvatarUrl" alt="profile">
+                                <span class="profile-name">@Model.User.Username</span>
+                                @if (Model.User.CanChangeAvatar)
+                                {
+                                    <form action="/user/UpdateUserAvatar" method="post" enctype="multipart/form-data">
+                                        <div class="form-file">
+                                            <input type="hidden" name="userId" value="@Model.User.Id" />
+                                            <input type="file" name="avatar" class="form-file-input" id="customFile" accept="image/png, image/jpeg">
+                                            <label class="form-file-label" for="customFile">
+                                                <span class="form-file-text">Выбрать файл...</span>
+                                                <span class="form-file-button">Посмотреть</span>
+                                            </label>
+                                        </div>
+                                        <input type="submit" value="Обновить аватар" />
+                                    </form>
+                                }
+
+                                @if (User.Identity.IsAuthenticated && (User.FindFirst("id").Value != Model.User.Id.ToString()))
+                                {
+                                    @if (Model.User.CanAddFriend)
+                                    {
+                                        <div class="add-friend">
+                                            <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
+                                            <input type="hidden" class="userId" value="@Model.User.Id" />
+                                            <input type="button" class="btn-friend" value="Добавить в друзья" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="remove-friend">
+                                            <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
+                                            <input type="hidden" class="userId" value="@Model.User.Id" />
+                                            <input type="button" class="btn-friend" value="Удалить из друзей" />
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        @if (Model.User.IsOnline)
+                        {
+                            <div class="mt-3">
+                                <p class="text-muted">Online</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mt-3">
+                                <p class="text-muted">Offline</p>
+                            </div>
+                        }
+                        @if (Model.User.Birthday != null)
+                        {
+                            <div class="mt-3">
+                                <label class="tx-11 font-weight-bold mb-0 text-uppercase">Дата рождения:</label>
+                                <p class="text-muted">@Model.User.Birthday</p>
+                            </div>
+                        }
+                        @if (Model.User.Email != null)
+                        {
+                            <div class="mt-3">
+                                <label class="tx-11 font-weight-bold mb-0 text-uppercase">Email:</label>
+                                <p class="text-muted">@Model.User.Email</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <!-- USER PROFILE -->
+            <!-- FRIENDS -->
+            <div class="col-md-8 col-xl-6 middle-wrapper">
+                <div class="row">
+                    <div class="col-md-12 friends">
+                        <a href="/user/">
+                            <div class="col-md-12 grid-margin friend friend-template">
+                                <input hidden name="friend-id" value="" />
+                                <div class="card rounded">
+                                    <div class="card-header">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <img class="img-xs rounded-circle friend-avatarUrl" alt="avatar">
+                                                <div class="ml-2">
+                                                    <p class="friend-username"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="mb-3 tx-14 post-description"></p>
+                                    </div>
+                                </div>
+                        </a>
+                        </div>
+                        @foreach(var friend in Model.Friends)
+                        {
+                            <a href="/user/@friend.UserId">
+                                <div class="col-md-12 grid-margin friend">
+                                    <input hidden name="friend-id" value="@friend.UserId" />
+                                    <div class="card rounded">
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <img class="img-xs rounded-circle friend-avatarUrl" src="@friend.AvatarUrl" alt="avatar">
+                                                    <div class="ml-2">
+                                                        <p class="friend-username">@friend.Username</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <!-- FRIENDS -->
+        </div>
+    </div>
+</div>

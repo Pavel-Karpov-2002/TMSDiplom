@@ -219,19 +219,3 @@ img {
     border: 1px solid #f2f4f9;
     border-radius: 0.25rem;
 }
-
-.post-template {
-    display: none;
-}
-
-a.dropdown-item {
-    cursor: pointer;
-}
-
-.bottom-post-card {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}

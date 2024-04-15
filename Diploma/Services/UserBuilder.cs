@@ -7,8 +7,8 @@ namespace Diploma.Services
 {
     public class UserBuilder : IService
     {
-        public readonly FriendBuilder _friendBuilder;
-        public readonly FriendRepository _friendRepository;
+        private readonly FriendBuilder _friendBuilder;
+        private readonly FriendRepository _friendRepository;
 
         public const string DEFAULT_USER_AVATAR = "/images/userAvatars/default.png";
 

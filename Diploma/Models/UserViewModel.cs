@@ -15,6 +15,7 @@
         public bool CanEditPost { get; set; }
         public bool CanDeletePost { get; set; }
         public bool CanChangeAvatar { get; set; }
+        public bool CanAddFriend { get; set; }
 
     }
 }

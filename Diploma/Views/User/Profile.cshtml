@@ -3,6 +3,7 @@
 
 @section Style {
     <link rel="stylesheet" href="~/css/profile.css" />
+    <link rel="stylesheet" href="~/css/post.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 }
 
@@ -12,6 +13,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/post.js"></script>
+    <script src="~/js/friend.js"></script>
 }
 
 <div class="container">
@@ -34,7 +36,7 @@
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
-                                <a class="pt-1px d-none d-md-block" href="/user/">
+                                <a class="pt-1px d-none d-md-block" href="/user/friends?userId=@Model.Id">
                                     Друзья 
                                     <span class="text-muted tx-12">
                                         3,765
@@ -55,6 +57,7 @@
                         <div class="cover-body d-flex justify-content-between align-items-center">
                             <div>
                                 <img class="profile-pic" src="@Model.AvatarUrl" alt="profile">
+                                <span class="profile-name">@Model.Username</span>
                                 @if (Model.CanChangeAvatar)
                                 {
                                     <form action="/user/UpdateUserAvatar" method="post" enctype="multipart/form-data">
@@ -69,7 +72,26 @@
                                         <input type="submit" value="Обновить аватар" />
                                     </form>
                                 }
-                                <span class="profile-name">@Model.Username</span>
+
+                                @if (User.Identity.IsAuthenticated && (User.FindFirst("id").Value != Model.Id.ToString()))
+                                {
+                                    @if (Model.CanAddFriend)
+                                    {
+                                        <div class="add-friend">
+                                            <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
+                                            <input type="hidden" class="userId" value="@Model.Id" />
+                                            <input type="button" class="btn-friend" value="Добавить в друзья" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="remove-friend">
+                                            <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
+                                            <input type="hidden" class="userId" value="@Model.Id" />
+                                            <input type="button" class="btn-friend" value="Удалить из друзей" />
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -197,37 +219,6 @@
                 </div>
             </div>
             <!-- END POSTS -->
-
-            <!-- FRIENDS -->
-            <div class="d-none d-xl-block col-xl-3 right-wrapper">
-                <div class="row">
-                    <div class="col-md-12 grid-margin">
-                        <div class="card rounded">
-                            <div class="card-body">
-                                <h6 class="card-title">Друзья</h6>
-                                <div class="latest-friends">
-                                    <div class="row">
-                                        @foreach (var friend in Model.Friends)
-                                        {
-                                            <div class="col-md-4">
-                                                <a href="/user/@friend.UserId">
-                                                    <figure>
-                                                        <img class="img-fluid" src="@friend.AvatarUrl" alt="@friend.Username">
-                                                        <p class="p-friend-username">
-                                                            @friend.Username
-                                                        </p>
-                                                    </figure>
-                                                </a>
-                                            </div>
-                                        } 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- END FRIENDS -->
         </div>
     </div>
 </div>

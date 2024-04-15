@@ -41,6 +41,15 @@ namespace Diploma.DbStuff.Repositories
             _context.SaveChangesAsync();
         }
 
+        public void RemoveFriend(User me, User friendTo)
+        {
+            var friendOne = me.Friends.FirstOrDefault(f => f.MainUserId == friendTo.Id);
+            var friendTwo = friendTo.Friends.FirstOrDefault(f => f.MainUserId == me.Id);
+            _entyties.Remove(friendOne);
+            _entyties.Remove(friendTwo);
+            _context.SaveChangesAsync();
+        }
+
         public List<Friend>? GetFriendsByUserId(int userId)
         {
             return _entyties

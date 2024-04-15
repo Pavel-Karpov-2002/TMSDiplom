@@ -7,7 +7,7 @@ namespace Diploma.Services
 {
     public class FriendBuilder : IService
     {
-        public readonly UserRepository _userRepository;
+        private readonly UserRepository _userRepository;
 
         public FriendBuilder(UserRepository userRepository)
         {
@@ -22,6 +22,25 @@ namespace Diploma.Services
                 AvatarUrl = user.AvatarUrl,
                 UserId = user.Id,
                 Username = user.Username
+            };
+        }
+
+        public Friend RebuildFriendViewModelToFriend(int mainUserId, FriendViewModel friend)
+        {
+            var user = _userRepository.GetById(friend.UserId);
+            return new Friend()
+            {
+                FriendOfUser = user,
+                MainUserId = mainUserId
+            };
+        }
+
+        public FriendsViewModel BuildFriendsViewModel(UserViewModel user, List<FriendViewModel> friends)
+        {
+            return new FriendsViewModel
+            {
+                Friends = friends,
+                User = user
             };
         }
     }
