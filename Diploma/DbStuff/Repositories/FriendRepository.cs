@@ -7,16 +7,16 @@ namespace Diploma.DbStuff.Repositories
     {
         public FriendRepository(SocialNetworkWebDbContext context) : base(context) { }
 
-        public void MutualAdditionToFriends(User friend, User friendTo)
+        public void MutualAdditionToFriends(UserProfile friend, UserProfile friendTo)
         {
             var friendOne = new Friend
             {
-                MainUserId = friend.Id,
+                MainUserId = friend.UserId,
                 FriendOfUser = friendTo
             };
             var friendTwo = new Friend
             {
-                MainUserId = friendTo.Id,
+                MainUserId = friendTo.UserId,
                 FriendOfUser = friend
             };
             _entyties.Add(friendOne);
@@ -24,7 +24,7 @@ namespace Diploma.DbStuff.Repositories
             _context.SaveChanges();
         }
 
-        public async Task MutualAdditionToFriendsAsync(User friend, User friendTo)
+        public async Task MutualAdditionToFriendsAsync(UserProfile friend, UserProfile friendTo)
         {
             var friendOne = new Friend
             {
@@ -41,10 +41,10 @@ namespace Diploma.DbStuff.Repositories
             _context.SaveChangesAsync();
         }
 
-        public void RemoveFriend(User me, User friendTo)
+        public void RemoveFriend(UserProfile me, UserProfile friendTo)
         {
-            var friendOne = me.Friends.FirstOrDefault(f => f.MainUserId == friendTo.Id);
-            var friendTwo = friendTo.Friends.FirstOrDefault(f => f.MainUserId == me.Id);
+            var friendOne = me.Friends.FirstOrDefault(f => f.MainUserId == friendTo.UserId);
+            var friendTwo = friendTo.Friends.FirstOrDefault(f => f.MainUserId == me.UserId);
             _entyties.Remove(friendOne);
             _entyties.Remove(friendTwo);
             _context.SaveChangesAsync();
@@ -54,6 +54,7 @@ namespace Diploma.DbStuff.Repositories
         {
             return _entyties
                 .Include(friend => friend.FriendOfUser)
+                .ThenInclude(friend => friend.User)
                 .Where(friends => friends.MainUserId == userId)
                 .ToList();
         }

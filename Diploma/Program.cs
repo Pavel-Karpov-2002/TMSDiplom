@@ -1,6 +1,6 @@
-using Diploma.Controllers;
 using Diploma.DbStuff;
 using Diploma.DbStuff.Repositories;
+using Diploma.Services;
 using Diploma.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -10,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddAuthentication(options =>
     {
-        options.DefaultScheme = AuthController.AUTH_KEY;
+        options.DefaultScheme = AuthService.AUTH_KEY;
     })
-    .AddCookie(AuthController.AUTH_KEY, option =>
+    .AddCookie(AuthService.AUTH_KEY, option =>
     {
         option.AccessDeniedPath = "/auth/deny";
         option.LoginPath = "/Auth/Login";

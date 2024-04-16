@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Diploma.DbStuff.Models;
 using Diploma.DbStuff.Repositories;
-using Diploma.DbStuff.Models;
+using Diploma.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Diploma.Controllers.CustomAuthAttributes
 {
@@ -21,7 +22,7 @@ namespace Diploma.Controllers.CustomAuthAttributes
             var isValidRole = _roleNames.Any(roleName => role.Any(r => r.Name == roleName.ToString()));
             if (!isValidRole)
             {
-                context.Result = new ForbidResult(AuthController.AUTH_KEY);
+                context.Result = new ForbidResult(AuthService.AUTH_KEY);
             }
         }
     }

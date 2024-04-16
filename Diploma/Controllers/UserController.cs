@@ -11,6 +11,7 @@ namespace Diploma.Controllers
     public class UserController : Controller
     {
         private readonly UserRepository _userRepository;
+        private readonly UserProfileRepository _userProfileRepository;
         private readonly FriendRepository _friendRepository;
         private readonly FriendBuilder _friendBuilder;
         private readonly AuthService _authService;
@@ -31,7 +32,8 @@ namespace Diploma.Controllers
                               UploadFileHelper uploadFileHelper,
                               FriendRepository friendRepository,
                               FriendBuilder friendBuilder,
-                              AuthirizateUserPermissions authirizateUserPermissions)
+                              AuthirizateUserPermissions authirizateUserPermissions,
+                              UserProfileRepository userProfileRepository)
         {
             _userRepository = userRepository;
             _userBuilder = userBuilder;
@@ -42,6 +44,7 @@ namespace Diploma.Controllers
             _friendRepository = friendRepository;
             _friendBuilder = friendBuilder;
             _authirizateUserPermissions = authirizateUserPermissions;
+            _userProfileRepository = userProfileRepository;
         }
 
         public IActionResult Index()
@@ -52,7 +55,7 @@ namespace Diploma.Controllers
         [Route("user/{id:int}")]
         public async Task<IActionResult> Profile(int id)
         {
-            var user = await _userRepository.GetAllInformationAboutUserByIdAsync(id);
+            var user = await _userProfileRepository.GetAllInformationAboutUserByIdAsync(id);
             var userViewModel = _userBuilder.RebuildUserToUserViewModel(user);
             userViewModel.CanAddPost = _authirizateUserPermissions.CanAddPost(id);
             userViewModel.CanEditPost = _authirizateUserPermissions.CanEditPost(id);
@@ -80,9 +83,11 @@ namespace Diploma.Controllers
         [Authorize]
         public async Task<IActionResult> Friends(int userId)
         {
-            var user = await _userRepository.GetFriendsUserByIdAsync(userId);
+            var user = await _userProfileRepository.GetAllInformationAboutUserByIdAsync(userId);
             var userViewModel = _userBuilder.RebuildUserToUserViewModel(user);
             userViewModel.CanOpenAdminPanel = _authirizateUserPermissions.CanOpenAdminPanel();
+            userViewModel.CanAddFriend = _authirizateUserPermissions.CanAddFriend(userId);
+            userViewModel.CanChangeAvatar = _authirizateUserPermissions.CanChangeAvatar(userId);
             var friends = _friendRepository.GetFriendsByUserId(userId);
             var friendViewModels = friends.Select(f => _friendBuilder.RebuildFriendToFriendViewModel(f)).ToList();
             var friendsViewModel = _friendBuilder.BuildFriendsViewModel(userViewModel, friendViewModels);

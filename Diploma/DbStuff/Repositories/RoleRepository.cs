@@ -21,11 +21,11 @@ namespace Diploma.DbStuff.Repositories
 
         public List<Role> GetCurrentUserRoles()
         {
-            var currentUser = _authService.GetCurrentUser();
+            var currentUser = _authService.GetCurrentUserProfile();
             return GetUserRoles(currentUser);
         }
 
-        public List<Role> GetUserRoles(User user)
+        public List<Role> GetUserRoles(UserProfile user)
         {
             return _entyties
                 .Include(e => e.Users)

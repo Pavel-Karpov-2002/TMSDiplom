@@ -9,16 +9,18 @@ namespace Diploma.Services
     {
         private readonly FriendBuilder _friendBuilder;
         private readonly FriendRepository _friendRepository;
+        private readonly UserProfileBuilder _userProfileBuilder;
 
         public const string DEFAULT_USER_AVATAR = "/images/userAvatars/default.png";
 
-        public UserBuilder(FriendBuilder friendBuilder, FriendRepository friendRepository)
+        public UserBuilder(FriendBuilder friendBuilder, FriendRepository friendRepository, UserProfileBuilder userProfileBuilder)
         {
             _friendBuilder = friendBuilder;
             _friendRepository = friendRepository;
+            _userProfileBuilder = userProfileBuilder;
         }
 
-        public UserViewModel RebuildUserToUserViewModel(User user)
+        public UserViewModel RebuildUserToUserViewModel(UserProfile user)
         {
             var friends = _friendRepository
                 .GetFriendsByUserId(user.Id)
@@ -29,13 +31,12 @@ namespace Diploma.Services
                 .ToList();
             return new UserViewModel()
             {
-                Id = user.Id,
-                Username = user.Username,
+                Id = user.UserId,
+                Username = user.User.Username,
                 Friends = friends,
-                Email = user.Email ?? "",
-                IsOnline = user.IsOnline,
-                Birthday = user.Birthday ?? null,
-                AvatarUrl = user.AvatarUrl ?? DEFAULT_USER_AVATAR
+                Email = user.User.Email ?? "",
+                AvatarUrl = user.User.AvatarUrl ?? DEFAULT_USER_AVATAR,
+                Birthday = user.Birthday               
             };
         }
 
@@ -48,12 +49,15 @@ namespace Diploma.Services
                 Email = user.Email ?? "",
                 Username = user.Username,
                 AvatarUrl = DEFAULT_USER_AVATAR,
-                Birthday = null,
-                Roles = new List<Role> { new Role { Name = Roles.User.ToString() } }
+                UserProfile = new UserProfile
+                {
+                    Friends = new (),
+                    Roles = new ()
+                }
             };
         }
 
-        public User BuildUser(string login, string password, string? email, string username, string? avatarUrl, DateTime? birthday)
+        public User BuildUser(string login, string password, string? email, string username, string? avatarUrl)
         {
             return new User()
             {
@@ -62,7 +66,11 @@ namespace Diploma.Services
                 Email = email ?? "",
                 Username = username,
                 AvatarUrl = avatarUrl ?? DEFAULT_USER_AVATAR,
-                Birthday = birthday ?? null
+                UserProfile = new UserProfile
+                {
+                    Friends = new(),
+                    Roles = new()
+                }
             };
         }
     }

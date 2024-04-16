@@ -6,8 +6,8 @@
         let userId = divFriend.find('.userId').val();
         let mainUserId = divFriend.find('.mainUserId').val();
         const friend = {
-            userId: parseInt(userId),
-            mainUserId: parseInt(mainUserId)
+            UserId: parseInt(userId),
+            MainUserId: parseInt(mainUserId)
         }
         const isAdd = divFriend.hasClass('add-friend');
         let url = '';
@@ -18,7 +18,6 @@
             url = '/FriendApi/DeleteFriend';
         }
         $.get(url, friend, function (response) {
-                alert(response);
                 if (isAdd) {
                     addFriend.val('Удалить из друзей');
                     divFriend.addClass('remove-friend');

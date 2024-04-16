@@ -7,11 +7,11 @@ namespace Diploma.Services
 {
     public class FriendBuilder : IService
     {
-        private readonly UserRepository _userRepository;
+        private readonly UserProfileRepository _userProfileRepository;
 
-        public FriendBuilder(UserRepository userRepository)
+        public FriendBuilder(UserProfileRepository userRepository)
         {
-            _userRepository = userRepository;
+            _userProfileRepository = userRepository;
         }
 
         public FriendViewModel RebuildFriendToFriendViewModel(Friend friend)
@@ -19,15 +19,15 @@ namespace Diploma.Services
             var user = friend.FriendOfUser;
             return new FriendViewModel()
             {
-                AvatarUrl = user.AvatarUrl,
-                UserId = user.Id,
-                Username = user.Username
+                AvatarUrl = user.User.AvatarUrl,
+                UserId = user.UserId,
+                Username = user.User.Username
             };
         }
 
         public Friend RebuildFriendViewModelToFriend(int mainUserId, FriendViewModel friend)
         {
-            var user = _userRepository.GetById(friend.UserId);
+            var user = _userProfileRepository.GetById(friend.UserId);
             return new Friend()
             {
                 FriendOfUser = user,

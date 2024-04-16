@@ -10,12 +10,14 @@ namespace Diploma.Controllers
         private readonly UserBuilder _userBuilder;
         private readonly UserRepository _userRepository;
         private readonly RegistrationHelper _registrationHelper;
+        private readonly AuthService _authService;
 
-        public RegistrationController(UserBuilder userBuilder, UserRepository userRepository, RegistrationHelper registrationHelper)
+        public RegistrationController(UserBuilder userBuilder, UserRepository userRepository, RegistrationHelper registrationHelper, AuthService authService)
         {
             _userBuilder = userBuilder;
             _userRepository = userRepository;
             _registrationHelper = registrationHelper;
+            _authService = authService;
         }
 
         [Route("registration")]
@@ -34,6 +36,7 @@ namespace Diploma.Controllers
             }
             var newUser = _userBuilder.RebuildRegistrationViewToUser(user);
             await _userRepository.AddAsync(newUser);
+            _authService.SignInUser(newUser);
             return RedirectToAction("Profile", "User", new { id = newUser.Id });
         }
 

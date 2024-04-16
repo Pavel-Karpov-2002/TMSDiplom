@@ -1,6 +1,7 @@
 ﻿using Diploma.DbStuff.Models;
 using Diploma.DbStuff.Repositories;
 using Diploma.Models;
+using Diploma.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -10,12 +11,12 @@ namespace Diploma.Controllers
     public class AuthController : Controller
     {
         private readonly UserRepository _userRepository;
+        private readonly AuthService _authService;
 
-        public const string AUTH_KEY = "keyYEK";
-
-        public AuthController(UserRepository userRepository)
+        public AuthController(UserRepository userRepository, AuthService authService)
         {
             _userRepository = userRepository;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -45,7 +46,7 @@ namespace Diploma.Controllers
                 return View(authViewModel);
             }
 
-            SignInUser(user);
+            _authService.SignInUser(user);
 
             return RedirectToAction("Profile", "User", new { id = user.Id });
         }
@@ -54,24 +55,6 @@ namespace Diploma.Controllers
         {
             HttpContext.SignOutAsync().Wait();
             return RedirectToAction("Login", "Auth");
-        }
-
-        private void SignInUser(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim("id", user.Id.ToString()),
-                new Claim("login", user.Login ?? "user"),
-                new Claim("username", user.Username ?? "user"),
-                new Claim("email", user.Email ?? ""),
-                new Claim("avatar", user.AvatarUrl ?? "")
-            };
-
-            var identity = new ClaimsIdentity(claims, AUTH_KEY);
-            var principal = new ClaimsPrincipal(identity);
-            HttpContext
-                .SignInAsync(AUTH_KEY, principal)
-                .Wait();
         }
     }
 }

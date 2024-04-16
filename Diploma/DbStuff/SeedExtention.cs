@@ -1,7 +1,6 @@
 ﻿using Diploma.DbStuff.Models;
 using Diploma.DbStuff.Repositories;
 using Diploma.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Diploma.DbStuff
 {
@@ -21,43 +20,47 @@ namespace Diploma.DbStuff
         {
             var userRepository = serviceProvider.GetService<UserRepository>();
             var userBuilder = serviceProvider.GetService<UserBuilder>();
+            var userProfileBuilder = serviceProvider.GetService<UserProfileBuilder>();
 
 
             if (!userRepository.AnyUserWithLogin("admin"))
             {
                 var birthday = new DateTime(2010, 10, 23);
-                var admin = userBuilder.BuildUser("admin", "123", "test@test.com", "Admin Adminov", "", birthday);
-                admin.Roles = new List<Role> { GetRole(serviceProvider, "admin") };
+                var admin = userBuilder.BuildUser("admin", "123", "test@test.com", "Admin Adminov", null);
+                admin.UserProfile = userProfileBuilder.BuildUserProfile(admin, birthday);
+                admin.UserProfile.Roles.Add(GetRole(serviceProvider, Roles.Admin.ToString()));
                 userRepository.Add(admin);
             }
 
             if (!userRepository.AnyUserWithLogin("moderator"))
             {
                 var birthday = new DateTime(2009, 11, 23);
-                var moderator = userBuilder.BuildUser("moderator", "123", "test@test.com", "Moderator Moderatorov", "", birthday);
-                moderator.Roles = new List<Role> { GetRole(serviceProvider, "moderator") };
+                var moderator = userBuilder.BuildUser("moderator", "123", "test@test.com", "Moderator Moderatorov", null);
+                moderator.UserProfile = userProfileBuilder.BuildUserProfile(moderator, birthday);
+                moderator.UserProfile.Roles.Add(GetRole(serviceProvider, Roles.Moderator.ToString()));
                 userRepository.Add(moderator);
             }
 
             if (!userRepository.AnyUserWithLogin("user"))
             {
                 var birthday = new DateTime(2015, 8, 23);
-                var user = userBuilder.BuildUser("user", "123", "test@test.com", "User Userov", "", birthday);
-                user.Roles = new List<Role> { GetRole(serviceProvider, "user") };
+                var user = userBuilder.BuildUser("user", "123", "test@test.com", "User Userov", null);
+                user.UserProfile = userProfileBuilder.BuildUserProfile(user, birthday);
+                user.UserProfile.Roles.Add(GetRole(serviceProvider, Roles.User.ToString()));
                 userRepository.Add(user);
             }
         }
 
         private async static void SeedFriends(IServiceProvider serviceProvider)
         {
-            var userRepository = serviceProvider.GetService<UserRepository>();
+            var userProfileRepository = serviceProvider.GetService<UserProfileRepository>();
             var friendRepository = serviceProvider.GetService<FriendRepository>();
 
             if (!friendRepository.Any())
             {
-                var admin = userRepository.GetAllInformationAboutUserByLogin("admin");
-                var moderator = userRepository.GetAllInformationAboutUserByLogin("moderator");
-                var user = userRepository.GetAllInformationAboutUserByLogin("user");
+                var admin = userProfileRepository.GetAllInformationAboutUserByLogin("admin");
+                var moderator = userProfileRepository.GetAllInformationAboutUserByLogin("moderator");
+                var user = userProfileRepository.GetAllInformationAboutUserByLogin("user");
                 friendRepository.MutualAdditionToFriends(user, admin);
                 friendRepository.MutualAdditionToFriends(user, moderator);
             }

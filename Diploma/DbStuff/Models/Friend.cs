@@ -3,6 +3,6 @@
     public class Friend : BaseModel
     {
         public int MainUserId { get; set; }
-        public virtual User FriendOfUser { get; set; }
+        public virtual UserProfile FriendOfUser { get; set; }
     }
 }

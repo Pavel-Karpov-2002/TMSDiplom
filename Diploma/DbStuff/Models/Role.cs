@@ -3,7 +3,7 @@
     public class Role : BaseModel
     {
         public string Name { get; set; }
-        public virtual List<User>? Users { get; set; }
+        public virtual List<UserProfile>? Users { get; set; }
     }
 
     [Flags]
