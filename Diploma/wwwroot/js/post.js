@@ -4,6 +4,12 @@
         .build();
 
     const addPostButton = $('.btn-add-post');
+    let ip = "";
+
+    $.getJSON("https://api.ipify.org?format=json",
+        function (data) {
+            ip = data.ip;
+        });
 
     addPostButton.click(() => {
         const descriptionPost = $('.btn-post-description');
@@ -27,12 +33,12 @@
 
     hub.on('LastUserPosts', (lastPosts) => {
         lastPosts.forEach((post) => {
-            addPostOnPage(post.id, post.creatorUserName, post.creatorAvatarUrl, post.description, post.dateOfCreation);
+            addPostOnPage(post.id, post.creatorUserName, post.creatorAvatarUrl, post.description, post.dateOfCreation, post.country + " " + post.city, post.countryCode);
         });
     });
 
     hub.on('UserGotNewPost', (post) => {
-        addPostOnPage(post.id, post.creatorUserName, post.creatorAvatarUrl, post.description, post.dateOfCreation);
+        addPostOnPage(post.id, post.creatorUserName, post.creatorAvatarUrl, post.description, post.dateOfCreation, post.country + " " + post.city, post.countryCode);
     });
 
     hub.start().then(() => {
@@ -41,15 +47,21 @@
     });
    
     const addPostOnServer = (post) => {
-        hub.invoke('AddNewPost', {...post});
+        const addPostModel = {
+            post: post,
+            ip: ip
+        }
+        hub.invoke('AddNewPost', addPostModel);
     };
 
-    const addPostOnPage = (postId, userName, userAvatarUrl, description, dateOfCreation) => {
+    const addPostOnPage = (postId, userName, userAvatarUrl, description, dateOfCreation, location, locationCode) => {
         const newPostBlock = $('.post.post-template').clone();
         newPostBlock.removeClass('post-template');
         newPostBlock.find('.post-creator').text(userName);
         newPostBlock.find('.user-avatarUrl').attr('src', userAvatarUrl);
         newPostBlock.find('.post-description').text(description);
+        newPostBlock.find('.post-location').attr('src', 'https://flagsapi.com/' + locationCode + '/flat/64.png');
+        newPostBlock.find('.post-location').attr('title', location);
         let timestamp = new Date(dateOfCreation).getTime();
         let datetime = new Date(timestamp);
         newPostBlock.find('.post-create-time').text(datetime.toLocaleString());

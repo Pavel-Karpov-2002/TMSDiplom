@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PostMicroService.DbStuff;
 using PostMicroService.DbStuff.Repositories;
 using PostMicroService.Services;
+using PostMicroService.ApiControllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,11 @@ builder.Services.AddDbContext<PostNetworkWebDbContext>(x => x.UseSqlServer(conne
 
 builder.Services.AddScoped<PostRepository>();
 builder.Services.AddScoped<PostBuilder>();
+
+builder.Services.AddHttpClient<LocationApi>(client =>
+{
+    client.BaseAddress = new Uri("http://ip-api.com");
+});
 
 builder.Services.AddHttpContextAccessor();
 

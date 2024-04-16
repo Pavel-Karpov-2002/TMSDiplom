@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PostMicroService.DbStuff;
 
@@ -11,9 +12,11 @@ using PostMicroService.DbStuff;
 namespace PostMicroService.Migrations
 {
     [DbContext(typeof(PostNetworkWebDbContext))]
-    partial class PostNetworkWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240416100556_AddLocationPost")]
+    partial class AddLocationPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,14 +74,13 @@ namespace PostMicroService.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LocationPostId")
+                    b.Property<int>("LocationPostId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LocationPostId")
-                        .IsUnique()
-                        .HasFilter("[LocationPostId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Posts");
                 });
@@ -87,7 +89,9 @@ namespace PostMicroService.Migrations
                 {
                     b.HasOne("PostMicroService.DbStuff.Models.LocationPost", "LocationPost")
                         .WithOne("Post")
-                        .HasForeignKey("PostMicroService.DbStuff.Models.Post", "LocationPostId");
+                        .HasForeignKey("PostMicroService.DbStuff.Models.Post", "LocationPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("LocationPost");
                 });

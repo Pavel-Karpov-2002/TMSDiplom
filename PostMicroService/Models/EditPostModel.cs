@@ -1,6 +1,6 @@
 ﻿namespace PostMicroService.Models
 {
-    public class EditPostView
+    public class EditPostModel
     {
         public int PostId { get; set; }
         public string Description { get; set; }

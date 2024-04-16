@@ -1,4 +1,5 @@
-﻿using PostMicroService.DbStuff.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PostMicroService.DbStuff.Models;
 
 namespace PostMicroService.DbStuff.Repositories
 {
@@ -17,6 +18,14 @@ namespace PostMicroService.DbStuff.Repositories
         public List<Post> GetPostsByCreator(int userId)
         {
             return _entyties
+                .Where(post => post.CreatorUserId == userId)
+                .ToList();
+        }
+
+        public List<Post> GetPostsWithLocationByCreator(int userId)
+        {
+            return _entyties
+                .Include(post => post.LocationPost)
                 .Where(post => post.CreatorUserId == userId)
                 .ToList();
         }
