@@ -9,6 +9,13 @@ namespace Diploma.DbStuff.Repositories
         {
         }
 
+        public List<UserProfile> GetAllUsersWithAllInformations()
+            => _entyties
+            .Include(user => user.Roles)
+            .Include(user => user.Friends)
+            .Include(user => user.User)
+            .ToList();
+
         public UserProfile GetAllInformationAboutUserByLogin(string login)
             => _entyties
             .Include(user => user.Roles)

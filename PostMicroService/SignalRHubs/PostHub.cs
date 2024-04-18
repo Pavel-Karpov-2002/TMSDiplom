@@ -24,24 +24,13 @@ namespace PostMicroService.SignalRHubs
 
         public const int COUNT_LAST_POSTS = 10;
 
-        public async Task AddNewPost(AddPostModel addPostModel)
+        public async Task AddNewPost(AddPostViewModel addPostModel)
         {
+            var post = _postBuilder.BuildPost(addPostModel.Post);
             var location = await _locationApi.GetLocationByIp(addPostModel.UserIp);
-            addPostModel.Post.LocationPost = location;
-            _postRepository.Add(addPostModel.Post);
-            var post = addPostModel.Post;
-            var sendPost = new
-                {
-                post.Id,
-                post.CreatorUserId,
-                post.CreatorAvatarUrl,
-                post.CreatorUserName,
-                post.DateOfCreation,
-                post.Description,
-                location.City,
-                location.Country,
-                location.CountryCode
-                };
+            post.LocationPost = location;
+            _postRepository.Add(post);
+            var sendPost = _postBuilder.BuildPostViewModel(post);
             Clients.All.SendAsync("UserGotNewPost", sendPost).Wait();
         }
         
@@ -49,18 +38,7 @@ namespace PostMicroService.SignalRHubs
         {
             var posts = _postRepository
                 .GetPostsWithLocationByCreator(userId)
-                .Select(post => new
-                {
-                    post.Id,
-                    post.CreatorUserId,
-                    post.CreatorAvatarUrl,
-                    post.CreatorUserName,
-                    post.DateOfCreation,
-                    post.Description,
-                    post.LocationPost.City,
-                    post.LocationPost.Country,
-                    post.LocationPost.CountryCode
-                });
+                .Select(post => _postBuilder.BuildPostViewModel(post));
             Clients.Caller.SendAsync("LastUserPosts", posts);
         }
 
@@ -70,7 +48,7 @@ namespace PostMicroService.SignalRHubs
             return true;
         }
 
-        public async Task<bool> EditPost(EditPostModel editPost)
+        public async Task<bool> EditPost(EditPostViewModel editPost)
         {
             var post = await _postRepository.GetByIdAsync(editPost.PostId);
             var updatePost = _postBuilder.RebuildEditPostToPost(post, editPost);

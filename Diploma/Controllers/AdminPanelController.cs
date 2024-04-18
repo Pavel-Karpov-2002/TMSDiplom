@@ -25,7 +25,7 @@ namespace Diploma.Controllers
         [Role(Roles.Admin)]
         public IActionResult Index(int countTakeUsers)
         {
-            var users = _userProfileRepository.GetAll().TakeLast(countTakeUsers).ToList();
+            var users = _userProfileRepository.GetAllUsersWithAllInformations().TakeLast(countTakeUsers).ToList();
             var adminPanelViewMode = _adminPanelBuilder.BuildAdminPanelViewModel(users);
             return View(adminPanelViewMode);
         }

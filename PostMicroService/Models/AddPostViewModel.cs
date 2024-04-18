@@ -2,9 +2,9 @@
 
 namespace PostMicroService.Models
 {
-    public class AddPostModel
+    public class AddPostViewModel
     {
-        public Post Post { get; set; }
+        public PostViewModel Post { get; set; }
         public string UserIp { get; set; }
     }
 }

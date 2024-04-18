@@ -14,7 +14,7 @@
     addPostButton.click(() => {
         const descriptionPost = $('.btn-post-description');
         if (descriptionPost.val().length) {
-            let userId = $('.user-id').val();
+            let userId = window.location.pathname.split('/').pop();
             let description = descriptionPost.val()
             let creatorUserName = $('.user-name').val();
             let userAvatarUrl = $('.user-avatar-url').val();
