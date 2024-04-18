@@ -396,11 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/Net14Online/Net14Web/wwwroot/images/dndAvatars/*.png
-/Net14Online/Net14Web/wwwroot/images/dndAvatars/*.jpg
-/Net14Online/Net14Web/wwwroot/images/movies/userAvatars/*
-!/Net14Online/Net14Web/wwwroot/images/movies/userAvatars/default.png
-/Net14Online/Net14Web/wwwroot/images/movies/moviePosters/*
-!/Net14Online/Net14Web/wwwroot/images/movies/moviePosters/default.png
+/TMSDiplom/Diploma/wwwroot/images/userAvatars/*.png
+/TMSDiplom/Diploma/wwwroot/images/userAvatars/*.jpg
+/TMSDiplom/Diploma/wwwroot/images/userAvatars/*
+!/TMSDiplom/Diploma/wwwroot/images/userAvatars/default.png
 
 /build
