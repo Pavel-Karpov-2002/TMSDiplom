@@ -7,6 +7,11 @@
 </head>
 <body>
     <header>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a href="/user/SwitchLocale?locale=en">English</a>
+            <a href="/user/SwitchLocale?locale=ru">Русский</a>
+        }
     </header>
     <div>
         <main role="main">

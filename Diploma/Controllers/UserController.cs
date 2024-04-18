@@ -93,5 +93,13 @@ namespace Diploma.Controllers
             var friendsViewModel = _friendBuilder.BuildFriendsViewModel(userViewModel, friendViewModels);
             return View(friendsViewModel);
         }
+
+        [Authorize]
+        public IActionResult SwitchLocale(string locale)
+        {
+            var userId = _authService.GetCurrentUserId().Value;
+            _userProfileRepository.SwitchLocal(userId, locale);
+            return RedirectToAction("Profile", new { id = userId });
+        }
     }
 }

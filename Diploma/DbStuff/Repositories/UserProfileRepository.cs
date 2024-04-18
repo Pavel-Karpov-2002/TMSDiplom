@@ -58,5 +58,12 @@ namespace Diploma.DbStuff.Repositories
             => await _entyties
             .Include(user => user.Friends)
             .FirstOrDefaultAsync(x => x.UserId == id);
+
+        public void SwitchLocal(int userId, string locale)
+        {
+            var user = _entyties.FirstOrDefault(user => user.UserId == userId);
+            user.PreferLocale = locale;
+            _context.SaveChanges();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using Diploma.Models
+@using Diploma.LocalizationFiles
 @model RegistrationViewModel
 
 @section Style {
@@ -15,11 +16,11 @@
 <ul class="nav nav-pills nav-justified mb-3" id="ex1">
     <li class="nav-item">
         <a class="nav-link active" id="tab-login" data-mdb-pill-init href="Auth/Login"
-           aria-controls="pills-login" aria-selected="true">Вход</a>
+           aria-controls="pills-login" aria-selected="true">@Authorization.SignIn</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" id="tab-register" data-mdb-pill-init href="Registration"
-           aria-controls="pills-register" aria-selected="false">Регистрация</a>
+           aria-controls="pills-register" aria-selected="false">@Authorization.Register</a>
     </li>
 </ul>
 
@@ -28,19 +29,17 @@
     <div class="tab-pane fade show active" aria-labelledby="tab-register">
         @using (Html.BeginForm(nameof(Diploma.Controllers.RegistrationController.Registration), "Registration", FormMethod.Post, new { @class = "mx-1 mx-md-4" }))
         {
-            <p class="text-center">or:</p>
-
             <!-- Name input -->
             <div data-mdb-input-init class="form-outline mb-4">
                 @Html.TextBoxFor(x => x.Login, new { @class = "form-control", id = "registerName", type = "text" });
-                <label class="form-label" for="registerName">Логин</label>
+                <label class="form-label" for="registerName">@Authorization.Login</label>
                 @Html.ValidationMessageFor(x => x.Login);
             </div>
 
             <!-- Username input -->
             <div data-mdb-input-init class="form-outline mb-4">
                 @Html.TextBoxFor(x => x.Username, new { @class = "form-control", id = "registerUsername", type = "text" });
-                <label class="form-label" for="registerUsername">Никнейм</label>
+                <label class="form-label" for="registerUsername">@Authorization.Username</label>
                 @Html.ValidationMessageFor(x => x.Username);
             </div>
 
@@ -54,18 +53,18 @@
             <!-- Password input -->
             <div data-mdb-input-init class="form-outline mb-4">
                 @Html.TextBoxFor(x => x.Password, new { @class = "form-control", id = "registerPassword", type = "password" });
-                <label class="form-label" for="registerPassword">Пароль</label>
+                <label class="form-label" for="registerPassword">@Authorization.Password</label>
                 @Html.ValidationMessageFor(x => x.Password);
             </div>
 
             <!-- Repeat Password input -->
             <div data-mdb-input-init class="form-outline mb-4">
                 @Html.TextBoxFor(x => x.PasswordConfirm, new { @class = "form-control", id = "registerRepeatPassword", type = "password" });
-                <label class="form-label" for="registerRepeatPassword">Повторите пароль</label>
+                <label class="form-label" for="registerRepeatPassword">@Authorization.RepeatPassword</label>
                 @Html.ValidationMessageFor(x => x.PasswordConfirm);
             </div>
             <!-- Submit button -->
-            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-3">Зарегистрироваться</button>
+            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-3">@Authorization.Register</button>
         }
     </div>
 </div>

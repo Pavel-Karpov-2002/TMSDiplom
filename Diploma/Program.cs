@@ -1,3 +1,4 @@
+using Diploma.CustomMiddlewares;
 using Diploma.DbStuff;
 using Diploma.DbStuff.Repositories;
 using Diploma.Services;
@@ -77,6 +78,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<CustomLocalizationMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

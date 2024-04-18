@@ -36,7 +36,8 @@ namespace Diploma.Controllers
             }
             var newUser = _userBuilder.RebuildRegistrationViewToUser(user);
             await _userRepository.AddAsync(newUser);
-            _authService.SignInUser(newUser);
+
+            _authService.SignInUser(newUser.UserProfile);
             return RedirectToAction("Profile", "User", new { id = newUser.Id });
         }
 

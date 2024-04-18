@@ -1,10 +1,8 @@
-﻿using Diploma.DbStuff.Models;
-using Diploma.DbStuff.Repositories;
+﻿using Diploma.DbStuff.Repositories;
 using Diploma.Models;
 using Diploma.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Diploma.Controllers
 {
@@ -34,7 +32,6 @@ namespace Diploma.Controllers
         public IActionResult Login(AuthViewModel authViewModel)
         {
             var user = _userRepository.GetUserByLoginAndPassword(authViewModel.Login, authViewModel.Password);
-            
             if (user is null)
             {
                 user = _userRepository.GetUserByEmailAndPassword(authViewModel.Login, authViewModel.Password);
@@ -46,7 +43,9 @@ namespace Diploma.Controllers
                 return View(authViewModel);
             }
 
-            _authService.SignInUser(user);
+            user = _userRepository.GetUserWithUserProfileById(user.Id);
+
+            _authService.SignInUser(user.UserProfile);
 
             return RedirectToAction("Profile", "User", new { id = user.Id });
         }

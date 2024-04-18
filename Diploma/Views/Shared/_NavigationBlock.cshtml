@@ -1,4 +1,5 @@
-﻿@model string // User id
+﻿@using Diploma.LocalizationFiles
+@model string // User id
 
 @section Style {
     <link rel="stylesheet" href="~/css/navigation.css" />
@@ -13,7 +14,7 @@
                     <li class="nav-item">
                         <a href="/auth/login" class="nav-link align-middle px-0">
                             <i class="fs-4 bi-house"></i>
-                            <span class="ms-1 d-none d-sm-inline">Войти</span>
+                            <span class="ms-1 d-none d-sm-inline">@NavigationMenu.SignIn</span>
                         </a>
                     </li>
                 </ul>
@@ -24,7 +25,7 @@
                     <li class="nav-item">
                         <a href="/auth/logout" class="nav-link align-middle px-0">
                             <i class="fs-4 bi-house"></i>
-                            <span class="ms-1 d-none d-sm-inline">Выйти</span>
+                            <span class="ms-1 d-none d-sm-inline">@NavigationMenu.SignOut</span>
                         </a>
                     </li>
                 </ul>
@@ -33,19 +34,13 @@
                     <li class="nav-item">
                         <a href="/user/@Model" class="nav-link align-middle px-0">
                             <i class="fs-4 bi-house"></i>
-                            <span class="ms-1 d-none d-sm-inline">Моя страница</span>
+                            <span class="ms-1 d-none d-sm-inline">@NavigationMenu.MyPage</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="user/friends/@Model" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Друзья</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="user/messages/@Model" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Сообщения</span>
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">@NavigationMenu.Friends</span>
                         </a>
                     </li>
                 </ul>

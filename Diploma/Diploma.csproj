@@ -24,4 +24,37 @@
     <Folder Include="wwwroot\images\userAvatars\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="LocalizationFiles\Authorization.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Authorization.resx</DependentUpon>
+    </Compile>
+    <Compile Update="LocalizationFiles\NavigationMenu.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NavigationMenu.resx</DependentUpon>
+    </Compile>
+    <Compile Update="LocalizationFiles\Profile.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Profile.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="LocalizationFiles\Authorization.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Authorization.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LocalizationFiles\NavigationMenu.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>NavigationMenu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LocalizationFiles\Profile.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Profile.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

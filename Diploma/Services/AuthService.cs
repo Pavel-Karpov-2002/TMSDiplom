@@ -12,7 +12,7 @@ namespace Diploma.Services
         private readonly UserProfileRepository _userProfileRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public const string AUTH_KEY = "keyYEK";
+        public const string AUTH_KEY = "keyYEKkey";
 
         public AuthService(UserRepository userRepository,
             IHttpContextAccessor httpContextAccessor,
@@ -23,15 +23,15 @@ namespace Diploma.Services
             _userProfileRepository = userProfileRepository;
         }
 
-        public void SignInUser(User user)
+        public void SignInUser(UserProfile user)
         {
             var claims = new List<Claim>
             {
-                new Claim("id", user.Id.ToString()),
-                new Claim("login", user.Login ?? "user"),
-                new Claim("username", user.Username ?? "user"),
-                new Claim("email", user.Email ?? ""),
-                new Claim("avatar", user.AvatarUrl ?? "")
+                new Claim("id", user.User.Id.ToString()),
+                new Claim("login", user.User.Login ?? "user"),
+                new Claim("username", user.User.Username ?? "user"),
+                new Claim("email", user.User.Email ?? ""),
+                new Claim("avatar", user.User.AvatarUrl ?? "")
             };
 
             var identity = new ClaimsIdentity(claims, AUTH_KEY);
