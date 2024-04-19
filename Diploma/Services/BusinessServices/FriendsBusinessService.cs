@@ -9,7 +9,7 @@ namespace Diploma.Services.BusinessServices
         private readonly FriendRepository _friendRepository;
         private readonly FriendBuilder _friendBuilder;
 
-        public const decimal NUMBER_OF_FRIENDS_ON_PAGE = 30;
+        public const decimal NUMBER_OF_FRIENDS_ON_PAGE = 1;
 
         public FriendsBusinessService(FriendRepository friendRepository, FriendBuilder friendBuilder)
         {
@@ -24,7 +24,7 @@ namespace Diploma.Services.BusinessServices
             var paginatorViewModel = new PaginatorViewModel<FriendViewModel>();
 
             var pagesCount = (int)Math.Ceiling((decimal)data.FriendsCount / NUMBER_OF_FRIENDS_ON_PAGE);
-            paginatorOptions.CurrentPage = pagesCount;
+            paginatorOptions.CurrentPage = page;
             paginatorOptions.AvailablePages = Enumerable.Range(1, pagesCount).ToList();
             paginatorViewModel.Items = data
                                     .Friends

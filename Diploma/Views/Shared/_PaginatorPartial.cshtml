@@ -2,12 +2,23 @@
 @model PaginatorOptionsViewModel
 
 <script src="~/js/paginator.js"></script>
-<div>
-    @foreach (var availablePage in Model.AvailablePages)
-    {
-        <a data-page='@(availablePage)'
-           class="page @(Model.CurrentPage == availablePage ? "active" : "")">
-            @(availablePage)
-        </a>
+<style> 
+    .page {
+        cursor: pointer;
     }
+</style>
+
+<div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @foreach (var availablePage in Model.AvailablePages)
+            {
+                <li class="page-item @(Model.CurrentPage == availablePage ? "active" : "")">
+                    <a data-page='@(availablePage)' class="page page-link">
+                        @(availablePage)
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>
