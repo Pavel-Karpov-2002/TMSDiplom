@@ -9,6 +9,11 @@ namespace Diploma.DbStuff.Repositories
         {
         }
 
+        public UserProfile GetUserInformationsById(int userId)
+            => _entyties
+            .Include(user => user.User)
+            .FirstOrDefault(x => x.UserId == userId);
+
         public List<UserProfile> GetAllUsersWithAllInformations()
             => _entyties
             .Include(user => user.Roles)

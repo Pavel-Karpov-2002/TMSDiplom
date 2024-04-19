@@ -1,7 +1,9 @@
 ﻿using Diploma.Controllers.CustomAuthAttributes;
 using Diploma.DbStuff.Models;
 using Diploma.DbStuff.Repositories;
+using Diploma.Models;
 using Diploma.Services;
+using Diploma.Services.BusinessServices;
 using Diploma.Services.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +21,7 @@ namespace Diploma.Controllers
         private readonly CreateFilePathHelper _createFilePathHelper;
         private readonly UploadFileHelper _uploadFileHelper;
         private readonly AuthirizateUserPermissions _authirizateUserPermissions;
+        private readonly FriendsBusinessService _friendsBusinessService;
 
         private string _straightPathForUsers = "";
 
@@ -33,7 +36,8 @@ namespace Diploma.Controllers
                               FriendRepository friendRepository,
                               FriendBuilder friendBuilder,
                               AuthirizateUserPermissions authirizateUserPermissions,
-                              UserProfileRepository userProfileRepository)
+                              UserProfileRepository userProfileRepository,
+                              FriendsBusinessService friendsBusinessService)
         {
             _userRepository = userRepository;
             _userBuilder = userBuilder;
@@ -45,6 +49,7 @@ namespace Diploma.Controllers
             _friendBuilder = friendBuilder;
             _authirizateUserPermissions = authirizateUserPermissions;
             _userProfileRepository = userProfileRepository;
+            _friendsBusinessService = friendsBusinessService;
         }
 
         public IActionResult Index()
@@ -60,8 +65,8 @@ namespace Diploma.Controllers
             userViewModel.CanAddPost = _authirizateUserPermissions.CanAddPost(id);
             userViewModel.CanEditPost = _authirizateUserPermissions.CanEditPost(id);
             userViewModel.CanDeletePost = _authirizateUserPermissions.CanDeletePost(id);
-            userViewModel.CanChangeAvatar = _authirizateUserPermissions.CanChangeAvatar(id);
-            userViewModel.CanAddFriend = _authirizateUserPermissions.CanAddFriend(id);
+            userViewModel.BlockProfileViewModel.CanChangeAvatar = _authirizateUserPermissions.CanChangeAvatar(id);
+            userViewModel.BlockProfileViewModel.CanAddFriend = _authirizateUserPermissions.CanAddFriend(id);
             userViewModel.CanOpenAdminPanel = _authirizateUserPermissions.CanOpenAdminPanel();
             return View(userViewModel);
         }
@@ -81,16 +86,17 @@ namespace Diploma.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Friends(int userId)
+        public async Task<IActionResult> Friends(int userId, int page)
         {
             var user = await _userProfileRepository.GetAllInformationAboutUserByIdAsync(userId);
             var userViewModel = _userBuilder.RebuildUserToUserViewModel(user);
             userViewModel.CanOpenAdminPanel = _authirizateUserPermissions.CanOpenAdminPanel();
-            userViewModel.CanAddFriend = _authirizateUserPermissions.CanAddFriend(userId);
-            userViewModel.CanChangeAvatar = _authirizateUserPermissions.CanChangeAvatar(userId);
-            var friends = _friendRepository.GetFriendsByUserId(userId);
-            var friendViewModels = friends.Select(f => _friendBuilder.RebuildFriendToFriendViewModel(f)).ToList();
-            var friendsViewModel = _friendBuilder.BuildFriendsViewModel(userViewModel, friendViewModels);
+            userViewModel.BlockProfileViewModel.CanAddFriend = _authirizateUserPermissions.CanAddFriend(userId);
+            userViewModel.BlockProfileViewModel.CanChangeAvatar = _authirizateUserPermissions.CanChangeAvatar(userId);
+
+            var paginator = _friendsBusinessService.GetUserFriendsOnPage(userId, page);
+            var friendsViewModel = _friendBuilder.BuildFriendsViewModel(userViewModel, paginator);
+
             return View(friendsViewModel);
         }
 

@@ -1,4 +1,5 @@
-﻿using Diploma.DbStuff.Models;
+﻿using Diploma.DbStuff.DataModels;
+using Diploma.DbStuff.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Diploma.DbStuff.Repositories
@@ -57,6 +58,24 @@ namespace Diploma.DbStuff.Repositories
                 .ThenInclude(friend => friend.User)
                 .Where(friends => friends.MainUserId == userId)
                 .ToList();
+        }
+
+        public FriendsPaginatorData GetFriendsByUserIdOnPage(int userId, int page, int perPage)
+        {
+            var friends = _entyties
+                .Include(friend => friend.FriendOfUser)
+                .ThenInclude(friend => friend.User)
+                .Where(friends => friends.MainUserId == userId)
+                .OrderByDescending(user => user.FriendOfUser.User.Username)
+                .Skip((page - 1) * perPage)
+                .Take(perPage)
+                .ToList();
+            var data = new FriendsPaginatorData
+            {
+                Friends = friends,
+                FriendsCount = _entyties.Where(friends => friends.MainUserId == userId).Count()
+            };
+            return data;
         }
     }
 }

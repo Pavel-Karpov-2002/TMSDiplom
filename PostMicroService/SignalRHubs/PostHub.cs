@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using PostMicroService.ApiControllers;
-using PostMicroService.DbStuff.Models;
 using PostMicroService.DbStuff.Repositories;
 using PostMicroService.Models;
 using PostMicroService.Services;
-using System.Diagnostics.Metrics;
-using System.Text.Json;
 
 namespace PostMicroService.SignalRHubs
 {

@@ -1,0 +1,13 @@
+﻿@using Diploma.Models
+@model PaginatorOptionsViewModel
+
+<script src="~/js/paginator.js"></script>
+<div>
+    @foreach (var availablePage in Model.AvailablePages)
+    {
+        <a data-page='@(availablePage)'
+           class="page @(Model.CurrentPage == availablePage ? "active" : "")">
+            @(availablePage)
+        </a>
+    }
+</div>

@@ -32,12 +32,13 @@ namespace Diploma.Controllers
 
         [Authorize]
         [Role(Roles.Admin)]
-        public async Task<IActionResult> EditUser(UserViewModel editedUser)
+        public IActionResult EditUser(EditUserViewModel editedUser)
         {
-            var user = await _userProfileRepository.GetByIdAsync(editedUser.Id);
+            var user = _userProfileRepository.GetUserInformationsById(editedUser.Id);
             user.User.Email = editedUser.Email;
             user.User.AvatarUrl = editedUser.AvatarUrl;
             user.User.Username = editedUser.Username;
+            user.Birthday = editedUser.Birthday;
             _userProfileRepository.Update(user);
             return RedirectToAction("Index", new { countTakeUsers = DEFAULT_COUNT_TAKE_USERS });
         }

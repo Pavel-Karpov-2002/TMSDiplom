@@ -2,6 +2,6 @@
 {
     public class AdminPanelViewModel
     {
-        public List<UserViewModel> Users { get; set; }
+        public List<BlockUserProfileViewModel> Users { get; set; }
     }
 }

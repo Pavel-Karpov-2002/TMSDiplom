@@ -14,7 +14,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/post.js"></script>
-    <script src="~/js/friend.js"></script>
 }
 
 @if (User.Identity.IsAuthenticated)
@@ -49,8 +48,8 @@ else
                                         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                     </svg>
-                                    <a class="pt-1px d-none d-md-block" href="/user/friends?userId=@Model.Id">
-                                        @Profile.Friends
+                                    <a class="pt-1px d-none d-md-block" href="/user/friends?userId=@Model.Id&page=1">
+                                        @Profile.Friends (@Model.CountFriends)
                                     </a>
                                 </li>
                                 @if (Model.CanOpenAdminPanel)
@@ -74,70 +73,11 @@ else
             </div>
             <div class="row profile-body">
                 <!-- USER PROFILE -->
-                <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
-                    <div class="card rounded">
-                        <div class="cover">
-                            <div class="gray-shade"></div>
-                            <div class="cover-body d-flex justify-content-between align-items-center">
-                                <div>
-                                    <img class="profile-pic" src="@Model.AvatarUrl" alt="profile">
-                                    <span class="profile-name">@Model.Username</span>
-                                    @if (Model.CanChangeAvatar)
-                                    {
-                                        <form action="/user/UpdateUserAvatar" method="post" enctype="multipart/form-data">
-                                            <div class="form-file">
-                                                <input type="hidden" name="userId" value="@Model.Id" />
-                                                <input type="file" name="avatar" class="form-file-input" id="customFile" accept="image/png, image/jpeg">
-                                                <label class="form-file-label" for="customFile">
-                                                    <span class="form-file-text">Выбрать файл...</span>
-                                                    <span class="form-file-button">Посмотреть</span>
-                                                </label>
-                                            </div>
-                                            <input type="submit" value="@Profile.ChangeAvatar" />
-                                        </form>
-                                    }
-
-                                    @if (User.Identity.IsAuthenticated && (User.FindFirst("id").Value != Model.Id.ToString()))
-                                    {
-                                        @if (Model.CanAddFriend)
-                                        {
-                                            <div class="add-friend">
-                                                <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
-                                                <input type="hidden" class="userId" value="@Model.Id" />
-                                                <input type="button" class="btn-friend" value="@Profile.AddToFriends" />
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="remove-friend">
-                                                <input type="hidden" class="mainUserId" value="@User.FindFirst("id").Value" />
-                                                <input type="hidden" class="userId" value="@Model.Id" />
-                                                <input type="button" class="btn-friend" value="@Profile.RemoveFromFriends" />
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            @if (Model.Birthday != null)
-                            {
-                                <div class="mt-3">
-                                    <label class="tx-11 font-weight-bold mb-0 text-uppercase">@Profile.DateOfBirth:</label>
-                                    <p class="text-muted">@Model.Birthday</p>
-                                </div>
-                            }
-                            <div class="mt-3">
-                                <label class="tx-11 font-weight-bold mb-0 text-uppercase">Email:</label>
-                                <p class="text-muted">@Model.Email</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("_BlockUserProfile", Model.BlockProfileViewModel)
                 <!-- USER PROFILE -->
 
                 <!-- POSTS -->
-                 <div class="col-md-8 col-xl-6 middle-wrapper">
+                <div class="col-md-8 col-xl-6 middle-wrapper">
                    <div class="row">
                         @if (Model.CanAddPost)
                         {

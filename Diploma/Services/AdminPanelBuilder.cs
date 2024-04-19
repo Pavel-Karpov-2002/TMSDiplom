@@ -15,7 +15,7 @@ namespace Diploma.Services
 
         public AdminPanelViewModel BuildAdminPanelViewModel(List<UserProfile> users)
         {
-            var usersViewModel = users.Select(user => _userBuilder.RebuildUserToUserViewModel(user)).ToList();
+            var usersViewModel = users.Select(user => _userBuilder.BuildBlockProfileViewModel(user)).ToList();
 
             return new AdminPanelViewModel
             {

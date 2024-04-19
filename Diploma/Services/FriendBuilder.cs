@@ -35,12 +35,13 @@ namespace Diploma.Services
             };
         }
 
-        public FriendsViewModel BuildFriendsViewModel(UserViewModel user, List<FriendViewModel> friends)
+        public FriendsViewModel BuildFriendsViewModel(UserViewModel user, PaginatorViewModel<FriendViewModel> paginatorView)
         {
             return new FriendsViewModel
             {
-                Friends = friends,
-                User = user
+                User = user,
+                PaginatorViewModel = paginatorView,
+                CountFriends = user.Friends.Count()
             };
         }
     }

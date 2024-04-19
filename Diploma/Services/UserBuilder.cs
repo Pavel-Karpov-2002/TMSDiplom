@@ -9,21 +9,19 @@ namespace Diploma.Services
     {
         private readonly FriendBuilder _friendBuilder;
         private readonly FriendRepository _friendRepository;
-        private readonly UserProfileBuilder _userProfileBuilder;
 
         public const string DEFAULT_USER_AVATAR = "/images/userAvatars/default.png";
 
-        public UserBuilder(FriendBuilder friendBuilder, FriendRepository friendRepository, UserProfileBuilder userProfileBuilder)
+        public UserBuilder(FriendBuilder friendBuilder, FriendRepository friendRepository)
         {
             _friendBuilder = friendBuilder;
             _friendRepository = friendRepository;
-            _userProfileBuilder = userProfileBuilder;
         }
 
         public UserViewModel RebuildUserToUserViewModel(UserProfile user)
         {
             var friends = _friendRepository
-                .GetFriendsByUserId(user.Id)
+                .GetFriendsByUserId(user.UserId)
                 .Select(
                     friend => 
                     _friendBuilder.RebuildFriendToFriendViewModel(friend)
@@ -32,11 +30,28 @@ namespace Diploma.Services
             return new UserViewModel()
             {
                 Id = user.UserId,
-                Username = user.User.Username,
                 Friends = friends,
+                BlockProfileViewModel = new BlockUserProfileViewModel
+                {
+                    UserId = user.UserId,
+                    Username = user.User.Username,
+                    Email = user.User.Email ?? "",
+                    UserAvatarUrl = user.User.AvatarUrl ?? DEFAULT_USER_AVATAR,
+                    Birthday = user.Birthday
+                },
+                CountFriends = friends.Count()
+            };
+        }
+
+        public BlockUserProfileViewModel BuildBlockProfileViewModel(UserProfile user)
+        {
+            return new BlockUserProfileViewModel
+            {
+                UserId = user.UserId,
+                Username = user.User.Username,
                 Email = user.User.Email ?? "",
-                AvatarUrl = user.User.AvatarUrl ?? DEFAULT_USER_AVATAR,
-                Birthday = user.Birthday               
+                UserAvatarUrl = user.User.AvatarUrl ?? DEFAULT_USER_AVATAR,
+                Birthday = user.Birthday
             };
         }
 

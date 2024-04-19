@@ -17,31 +17,34 @@ namespace Diploma.Services.Permissions
             _userProfileRepository = userProfileRepository;
         }
 
-        private int? CurrentUserID => _authService.GetCurrentUserId().Value;
+        private int? CurrentUserID => _authService.GetCurrentUserId();
         private UserProfile? UserProfile => _authService.GetCurrentUserProfile();
 
         public bool CanAddPost(int id)
             => (CurrentUserID is not null && id == CurrentUserID) ||
-            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString()));
+            (UserProfile is not null && UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString())));
 
         public bool CanEditPost(int id)
             => (CurrentUserID is not null && id == CurrentUserID) ||
-            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString())) ||
-            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Moderator.ToString()));
+            (UserProfile is not null && 
+            (UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString())) ||
+            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Moderator.ToString()))));
 
         public bool CanDeletePost(int id)
             => (CurrentUserID is not null && id == CurrentUserID) ||
-            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString()));
+            (UserProfile is not null && 
+            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString())));
 
         public bool CanChangeAvatar(int id)
             => (CurrentUserID is not null && id == CurrentUserID) ||
-            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString())) ||
-            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Moderator.ToString()));
+            (UserProfile is not null && 
+            (UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString())) ||
+            UserProfile.Roles.Any(r => r.Name.Equals(Roles.Moderator.ToString()))));
 
         public bool CanAddFriend(int id)
-            => _userProfileRepository.GetFriendsUserById(id).Friends.Any(f => f.MainUserId == CurrentUserID) == false;
+            => _userProfileRepository.GetFriendsUserById(id).Friends?.Any(f => f.MainUserId == CurrentUserID) == false;
 
         public bool CanOpenAdminPanel()
-            => UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString()));
+            => (UserProfile is not null && UserProfile.Roles.Any(r => r.Name.Equals(Roles.Admin.ToString())));
     }  
 }
